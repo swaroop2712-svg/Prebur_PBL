@@ -1,0 +1,157 @@
+<svg viewBox="0 0 640 700" class="risk-map-svg" id="rmSvgMap" style="width:100%;height:auto;max-height:550px;display:block;">
+  <!-- State watermark labels -->
+  <text x="180" y="60" fill="#214E3B" font-size="18" font-weight="700" letter-spacing="3" opacity="0.18">PUNJAB REGION</text>
+  <text x="450" y="670" fill="#214E3B" font-size="18" font-weight="700" letter-spacing="3" opacity="0.18">HARYANA REGION</text>
+  <g class="district-cell" data-d="Ambala" data-state="Haryana">
+    <path class="district" data-d="Ambala" data-state="Haryana" fill="#4F9468" d="M523.5,362.0L553.7,302.8L463.1,319.1L460.5,322.7L465.8,376.3Z"><title>Ambala (Haryana)</title></path>
+    <text x="490.6" y="338.6" class="district-map-lbl">Ambala</text>
+  </g>
+  <g class="district-cell" data-d="Bhiwani" data-state="Haryana">
+    <path class="district" data-d="Bhiwani" data-state="Haryana" fill="#4F9468" d="M425.9,536.8L436.6,581.0L366.0,685L184.0,685L385.8,523.6Z"><title>Bhiwani (Haryana)</title></path>
+    <text x="398.3" y="570.6" class="district-map-lbl">Bhiwani</text>
+  </g>
+  <g class="district-cell" data-d="Faridabad" data-state="Haryana">
+    <path class="district" data-d="Faridabad" data-state="Haryana" fill="#4F9468" d="M507.4,685L625,685L625,675.0L625,494.2L625,495.6L555.5,578.3Z"><title>Faridabad (Haryana)</title></path>
+    <text x="569.1" y="625.1" class="district-map-lbl">Faridabad</text>
+  </g>
+  <g class="district-cell" data-d="Fatehabad" data-state="Haryana">
+    <path class="district" data-d="Fatehabad" data-state="Haryana" fill="#4F9468" d="M368.3,447.1L366.5,455.0L264.7,530.1L269.2,432.9L349.1,422.9L363.3,430.5Z"><title>Fatehabad (Haryana)</title></path>
+    <text x="298.4" y="464.2" class="district-map-lbl">Fatehabad</text>
+  </g>
+  <g class="district-cell" data-d="Gurugram" data-state="Haryana">
+    <path class="district" data-d="Gurugram" data-state="Haryana" fill="#4F9468" d="M420.4,685L511.1,579.2L555.5,578.3L507.4,685Z"><title>Gurugram (Haryana)</title></path>
+    <text x="526.9" y="617.7" class="district-map-lbl">Gurugram</text>
+  </g>
+  <g class="district-cell" data-d="Hisar" data-state="Haryana">
+    <path class="district" data-d="Hisar" data-state="Haryana" fill="#4F9468" d="M385.8,523.6L184.0,685L140.7,685L264.7,530.1L366.5,455.0Z"><title>Hisar (Haryana)</title></path>
+    <text x="337.6" y="517.4" class="district-map-lbl">Hisar</text>
+  </g>
+  <g class="district-cell" data-d="Jhajjar" data-state="Haryana">
+    <path class="district" data-d="Jhajjar" data-state="Haryana" fill="#4F9468" d="M420.4,685L366.0,685L436.6,581.0L501.0,569.9L511.1,579.2Z"><title>Jhajjar (Haryana)</title></path>
+    <text x="473.2" y="596.4" class="district-map-lbl">Jhajjar</text>
+  </g>
+  <g class="district-cell" data-d="Jind" data-state="Haryana">
+    <path class="district" data-d="Jind" data-state="Haryana" fill="#4F9468" d="M368.3,447.1L366.5,455.0L385.8,523.6L425.9,536.8L472.6,504.5L468.0,464.5Z"><title>Jind (Haryana)</title></path>
+    <text x="423.7" y="493.1" class="district-map-lbl">Jind</text>
+  </g>
+  <g class="district-cell" data-d="Kaithal" data-state="Haryana">
+    <path class="district" data-d="Kaithal" data-state="Haryana" fill="#4F9468" d="M478.5,432.5L461.0,382.8L400.3,384.2L363.3,430.5L368.3,447.1L468.0,464.5L473.7,456.6Z"><title>Kaithal (Haryana)</title></path>
+    <text x="435.9" y="422.5" class="district-map-lbl">Kaithal</text>
+  </g>
+  <g class="district-cell" data-d="Karnal" data-state="Haryana">
+    <path class="district" data-d="Karnal" data-state="Haryana" fill="#4F9468" d="M478.5,432.5L542.2,407.4L625,472.4L473.7,456.6Z"><title>Karnal (Haryana)</title></path>
+    <text x="521.6" y="439.4" class="district-map-lbl">Karnal</text>
+  </g>
+  <g class="district-cell" data-d="Kurukshetra" data-state="Haryana">
+    <path class="district" data-d="Kurukshetra" data-state="Haryana" fill="#4F9468" d="M478.5,432.5L461.0,382.8L465.8,376.3L523.5,362.0L542.2,407.4Z"><title>Kurukshetra (Haryana)</title></path>
+    <text x="505.4" y="398.1" class="district-map-lbl">Kurukshetra</text>
+  </g>
+  <g class="district-cell" data-d="Panipat" data-state="Haryana">
+    <path class="district" data-d="Panipat" data-state="Haryana" fill="#4F9468" d="M473.7,456.6L468.0,464.5L472.6,504.5L488.0,515.5L625,489.6L625,472.4Z"><title>Panipat (Haryana)</title></path>
+    <text x="517.7" y="482.2" class="district-map-lbl">Panipat</text>
+  </g>
+  <g class="district-cell" data-d="Rohtak" data-state="Haryana">
+    <path class="district" data-d="Rohtak" data-state="Haryana" fill="#4F9468" d="M425.9,536.8L436.6,581.0L501.0,569.9L488.0,515.5L472.6,504.5Z"><title>Rohtak (Haryana)</title></path>
+    <text x="466.0" y="554.3" class="district-map-lbl">Rohtak</text>
+  </g>
+  <g class="district-cell" data-d="Sirsa" data-state="Haryana">
+    <path class="district" data-d="Sirsa" data-state="Haryana" fill="#4F9468" d="M269.2,432.9L264.7,530.1L140.7,685L15,685L15,680.9L141.2,425.0L145.4,422.8L241.6,410.8Z"><title>Sirsa (Haryana)</title></path>
+    <text x="237.3" y="461.3" class="district-map-lbl">Sirsa</text>
+  </g>
+  <g class="district-cell" data-d="Sonipat" data-state="Haryana">
+    <path class="district" data-d="Sonipat" data-state="Haryana" fill="#4F9468" d="M511.1,579.2L501.0,569.9L488.0,515.5L625,489.6L625,495.6L555.5,578.3Z"><title>Sonipat (Haryana)</title></path>
+    <text x="525.2" y="540.1" class="district-map-lbl">Sonipat</text>
+  </g>
+  <g class="district-cell" data-d="Yamunanagar" data-state="Haryana">
+    <path class="district" data-d="Yamunanagar" data-state="Haryana" fill="#4F9468" d="M542.2,407.4L523.5,362.0L553.7,302.8L625,124.9L625,494.2L625,495.6L625,489.6L625,472.4Z"><title>Yamunanagar (Haryana)</title></path>
+    <text x="561.8" y="374.9" class="district-map-lbl">Yamunanagar</text>
+  </g>
+  <g class="district-cell" data-d="Amritsar" data-state="Punjab">
+    <path class="district" data-d="Amritsar" data-state="Punjab" fill="#4F9468" d="M146.9,189.8L15,131.3L15,61.9L15,25.0L15,15L64.9,15L266.6,143.9L260.0,157.2Z"><title>Amritsar (Punjab)</title></path>
+    <text x="214.5" y="156.0" class="district-map-lbl">Amritsar</text>
+  </g>
+  <g class="district-cell" data-d="Barnala" data-state="Punjab">
+    <path class="district" data-d="Barnala" data-state="Punjab" fill="#4F9468" d="M269.8,354.5L261.8,326.5L309.7,285.3L351.2,310.1L321.3,374.7Z"><title>Barnala (Punjab)</title></path>
+    <text x="312.3" y="338.1" class="district-map-lbl">Barnala</text>
+  </g>
+  <g class="district-cell" data-d="Bathinda" data-state="Punjab">
+    <path class="district" data-d="Bathinda" data-state="Punjab" fill="#4F9468" d="M239.1,318.0L261.8,326.5L269.8,354.5L241.6,410.8L145.4,422.8L200.3,333.6Z"><title>Bathinda (Punjab)</title></path>
+    <text x="225.1" y="362.9" class="district-map-lbl">Bathinda</text>
+  </g>
+  <g class="district-cell" data-d="Faridkot" data-state="Punjab">
+    <path class="district" data-d="Faridkot" data-state="Punjab" fill="#4F9468" d="M239.1,318.0L219.0,258.6L164.4,290.8L200.3,333.6Z"><title>Faridkot (Punjab)</title></path>
+    <text x="198.0" y="295.2" class="district-map-lbl">Faridkot</text>
+  </g>
+  <g class="district-cell" data-d="Fatehgarh Sahib" data-state="Punjab">
+    <path class="district" data-d="Fatehgarh Sahib" data-state="Punjab" fill="#4F9468" d="M463.1,319.1L460.5,322.7L389.3,320.2L382.5,310.8L399.9,273.7L416.6,264.0L456.3,280.8Z"><title>Fatehgarh Sahib (Punjab)</title></path>
+    <text x="435.7" y="299.4" class="district-map-lbl">Fatehgarh Sahib</text>
+  </g>
+  <g class="district-cell" data-d="Fazilka" data-state="Punjab">
+    <path class="district" data-d="Fazilka" data-state="Punjab" fill="#4F9468" d="M141.2,425.0L15,680.9L15,675.0L15,61.9L15,131.3L120.4,281.5Z"><title>Fazilka (Punjab)</title></path>
+    <text x="91.9" y="334.9" class="district-map-lbl">Fazilka</text>
+  </g>
+  <g class="district-cell" data-d="Firozpur" data-state="Punjab">
+    <path class="district" data-d="Firozpur" data-state="Punjab" fill="#4F9468" d="M219.0,258.6L223.5,235.0L146.9,189.8L15,131.3L120.4,281.5L164.4,290.8Z"><title>Firozpur (Punjab)</title></path>
+    <text x="176.8" y="259.3" class="district-map-lbl">Firozpur</text>
+  </g>
+  <g class="district-cell" data-d="Gurdaspur" data-state="Punjab">
+    <path class="district" data-d="Gurdaspur" data-state="Punjab" fill="#4F9468" d="M317.0,145.6L344.9,118.1L128.6,15L64.9,15L266.6,143.9L316.4,145.8Z"><title>Gurdaspur (Punjab)</title></path>
+    <text x="291.8" y="96.6" class="district-map-lbl">Gurdaspur</text>
+  </g>
+  <g class="district-cell" data-d="Hoshiarpur" data-state="Punjab">
+    <path class="district" data-d="Hoshiarpur" data-state="Punjab" fill="#4F9468" d="M356.9,212.6L455.7,162.6L568.8,38.3L344.9,118.1L317.0,145.6Z"><title>Hoshiarpur (Punjab)</title></path>
+    <text x="365.7" y="171.5" class="district-map-lbl">Hoshiarpur</text>
+  </g>
+  <g class="district-cell" data-d="Jalandhar" data-state="Punjab">
+    <path class="district" data-d="Jalandhar" data-state="Punjab" fill="#4F9468" d="M356.9,212.6L317.0,145.6L316.4,145.8L290.3,240.3L305.6,252.3L354.0,220.4Z"><title>Jalandhar (Punjab)</title></path>
+    <text x="316.5" y="200.8" class="district-map-lbl">Jalandhar</text>
+  </g>
+  <g class="district-cell" data-d="Kapurthala" data-state="Punjab">
+    <path class="district" data-d="Kapurthala" data-state="Punjab" fill="#4F9468" d="M290.3,240.3L249.2,225.1L260.0,157.2L266.6,143.9L316.4,145.8Z"><title>Kapurthala (Punjab)</title></path>
+    <text x="288.1" y="192.9" class="district-map-lbl">Kapurthala</text>
+  </g>
+  <g class="district-cell" data-d="Ludhiana" data-state="Punjab">
+    <path class="district" data-d="Ludhiana" data-state="Punjab" fill="#4F9468" d="M382.5,310.8L351.2,310.1L309.7,285.3L305.6,252.3L354.0,220.4L399.9,273.7Z"><title>Ludhiana (Punjab)</title></path>
+    <text x="357.3" y="262.6" class="district-map-lbl">Ludhiana</text>
+  </g>
+  <g class="district-cell" data-d="Mansa" data-state="Punjab">
+    <path class="district" data-d="Mansa" data-state="Punjab" fill="#4F9468" d="M269.2,432.9L349.1,422.9L321.3,374.7L269.8,354.5L241.6,410.8Z"><title>Mansa (Punjab)</title></path>
+    <text x="289.8" y="395.4" class="district-map-lbl">Mansa</text>
+  </g>
+  <g class="district-cell" data-d="Moga" data-state="Punjab">
+    <path class="district" data-d="Moga" data-state="Punjab" fill="#4F9468" d="M239.1,318.0L261.8,326.5L309.7,285.3L305.6,252.3L290.3,240.3L249.2,225.1L223.5,235.0L219.0,258.6Z"><title>Moga (Punjab)</title></path>
+    <text x="257.9" y="274.9" class="district-map-lbl">Moga</text>
+  </g>
+  <g class="district-cell" data-d="Muktsar" data-state="Punjab">
+    <path class="district" data-d="Muktsar" data-state="Punjab" fill="#4F9468" d="M200.3,333.6L145.4,422.8L141.2,425.0L120.4,281.5L164.4,290.8Z"><title>Muktsar (Punjab)</title></path>
+    <text x="162.9" y="324.6" class="district-map-lbl">Muktsar</text>
+  </g>
+  <g class="district-cell" data-d="Nawanshahr" data-state="Punjab">
+    <path class="district" data-d="Nawanshahr" data-state="Punjab" fill="#4F9468" d="M399.9,273.7L354.0,220.4L356.9,212.6L455.7,162.6L416.6,264.0Z"><title>Nawanshahr (Punjab)</title></path>
+    <text x="395.2" y="229.9" class="district-map-lbl">Nawanshahr</text>
+  </g>
+  <g class="district-cell" data-d="Pathankot" data-state="Punjab">
+    <path class="district" data-d="Pathankot" data-state="Punjab" fill="#4F9468" d="M568.8,38.3L625,15L128.6,15L344.9,118.1Z"><title>Pathankot (Punjab)</title></path>
+    <text x="327.2" y="63.6" class="district-map-lbl">Pathankot</text>
+  </g>
+  <g class="district-cell" data-d="Patiala" data-state="Punjab">
+    <path class="district" data-d="Patiala" data-state="Punjab" fill="#4F9468" d="M461.0,382.8L400.3,384.2L389.3,320.2L460.5,322.7L465.8,376.3Z"><title>Patiala (Punjab)</title></path>
+    <text x="434.1" y="344.2" class="district-map-lbl">Patiala</text>
+  </g>
+  <g class="district-cell" data-d="Rupnagar" data-state="Punjab">
+    <path class="district" data-d="Rupnagar" data-state="Punjab" fill="#4F9468" d="M625,76.4L625,25.0L625,15L568.8,38.3L455.7,162.6L416.6,264.0L456.3,280.8Z"><title>Rupnagar (Punjab)</title></path>
+    <text x="455.3" y="253.1" class="district-map-lbl">Rupnagar</text>
+  </g>
+  <g class="district-cell" data-d="SAS Nagar (Mohali)" data-state="Punjab">
+    <path class="district" data-d="SAS Nagar (Mohali)" data-state="Punjab" fill="#4F9468" d="M625,124.9L553.7,302.8L463.1,319.1L456.3,280.8L625,76.4Z"><title>SAS Nagar (Mohali) (Punjab)</title></path>
+    <text x="482.1" y="291.1" class="district-map-lbl">SAS Nagar</text>
+  </g>
+  <g class="district-cell" data-d="Sangrur" data-state="Punjab">
+    <path class="district" data-d="Sangrur" data-state="Punjab" fill="#4F9468" d="M363.3,430.5L349.1,422.9L321.3,374.7L351.2,310.1L382.5,310.8L389.3,320.2L400.3,384.2Z"><title>Sangrur (Punjab)</title></path>
+    <text x="355.1" y="357.9" class="district-map-lbl">Sangrur</text>
+  </g>
+  <g class="district-cell" data-d="Tarn Taran" data-state="Punjab">
+    <path class="district" data-d="Tarn Taran" data-state="Punjab" fill="#4F9468" d="M223.5,235.0L146.9,189.8L260.0,157.2L249.2,225.1Z"><title>Tarn Taran (Punjab)</title></path>
+    <text x="222.1" y="182.4" class="district-map-lbl">Tarn Taran</text>
+  </g>
+</svg>

@@ -1,0 +1,29 @@
+{
+  "model_type": "RandomForestClassifier",
+  "n_estimators": 120,
+  "max_depth": 9,
+  "accuracy": 0.892,
+  "roc_auc": 0.9685,
+  "precision": 0.8715,
+  "recall": 0.9366,
+  "feature_names": [
+    "temperature",
+    "humidity",
+    "wind_speed",
+    "rainfall",
+    "crop_maturity",
+    "sowing_deadline_pressure",
+    "historical_burning_data"
+  ],
+  "feature_importances": {
+    "temperature": 0.0806,
+    "humidity": 0.0521,
+    "wind_speed": 0.0457,
+    "rainfall": 0.289,
+    "crop_maturity": 0.1668,
+    "sowing_deadline_pressure": 0.2328,
+    "historical_burning_data": 0.1329
+  },
+  "training_samples": 2000,
+  "test_samples": 500
+}

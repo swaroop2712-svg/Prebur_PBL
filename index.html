@@ -1,0 +1,2436 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>PreBurn Dashboard</title>
+
+    <style>
+        :root {
+            --bg: #F4F7F2;
+            --sidebar: #24505A;
+            --header: #FFFFFF;
+            --card: #FFFFFF;
+            --panel: #FFFFFF;
+            --primary: #3E7C86;
+            --primary-hover: #32646D;
+            --secondary-teal: #6B9298;
+            --light-teal: #E5EFF0;
+            --high-risk: #C94C4C;
+            --med-risk: #D89A32;
+            --low-risk: #4F9468;
+            --main-text: #26332C;
+            --secondary-text: #68756D;
+            --border: #D8E1DA;
+            --line: #D8E1DA;
+            --muted: #68756D;
+            --red: #C94C4C;
+            --orange: #D89A32;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--main-text);
+            font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        button,
+        select,
+        input {
+            font: inherit;
+        }
+
+        button,
+        select {
+            cursor: pointer;
+        }
+
+        header {
+            background: var(--header);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 24px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            box-shadow: 0 1px 3px rgba(38, 51, 45, 0.04);
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--sidebar);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand i {
+            color: var(--primary);
+            font-style: normal;
+        }
+
+        .subtitle {
+            flex: 1;
+            color: var(--main-text);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .subtitle small {
+            display: block;
+            color: var(--secondary-text);
+            font-weight: 400;
+            font-size: 12px;
+            margin-top: 1px;
+        }
+
+        header select,
+        header input,
+        .field select,
+        .toolbar input,
+        .toolbar select {
+            background: #FFFFFF;
+            color: var(--main-text);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        header select:focus,
+        header input:focus,
+        .field select:focus,
+        .toolbar input:focus,
+        .toolbar select:focus {
+            border-color: var(--primary);
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 215px 1fr;
+            min-height: calc(100vh - 65px);
+        }
+
+        aside {
+            background: var(--sidebar);
+            border-right: 1px solid #1c4048;
+            padding: 16px 10px;
+        }
+
+        .nav {
+            width: 100%;
+            display: block;
+            text-align: left;
+            background: transparent;
+            color: #d1ded8;
+            border: 0;
+            padding: 11px 14px;
+            border-radius: 6px;
+            margin: 3px 0;
+            font-size: 13px;
+            font-weight: 500;
+            transition: background 0.15s ease, color 0.15s ease;
+        }
+
+        aside .nav.active,
+        aside .nav:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #FFFFFF;
+            border-left: 3px solid var(--light-teal);
+        }
+
+        .alert button.nav,
+        .ph button.nav {
+            display: inline-block;
+            width: auto;
+            background: var(--light-teal);
+            color: var(--primary);
+            border: 1px solid #C4DDE2;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .alert button.nav:hover,
+        .ph button.nav:hover {
+            background: #d2e6eb;
+            color: var(--sidebar);
+        }
+
+        main {
+            padding: 20px 24px;
+            min-width: 0;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .heading h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--main-text);
+            letter-spacing: -0.3px;
+        }
+
+        .muted {
+            color: var(--secondary-text);
+            font-size: 12px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .metric,
+        .panel {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(38, 51, 45, 0.04);
+        }
+
+        .metric {
+            padding: 14px 16px;
+            min-height: 95px;
+        }
+
+        .metric label {
+            display: block;
+            color: var(--secondary-text);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .metric b {
+            display: block;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--main-text);
+            margin: 4px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .metric small {
+            color: var(--secondary-text);
+            font-size: 11px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 14px;
+        }
+
+        .panel {
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .ph {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--main-text);
+            background: #FAFCFA;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pb {
+            padding: 16px;
+        }
+
+        .map {
+            height: 355px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 6px;
+            background: #EDF3EC;
+            border: 1px solid var(--border);
+        }
+
+        .map svg {
+            width: 70%;
+            height: 95%;
+            position: absolute;
+            left: 12%;
+            top: 2%;
+            filter: drop-shadow(0 2px 4px rgba(36, 80, 90, 0.08));
+        }
+
+        .district {
+            stroke: #FFFFFF;
+            stroke-width: 1.5;
+            cursor: pointer;
+            transition: opacity 0.15s ease, stroke 0.15s ease;
+        }
+
+        .district:hover {
+            opacity: 0.85;
+            stroke: var(--sidebar);
+            stroke-width: 2.5;
+        }
+
+        .legend {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 11px;
+            line-height: 1.9;
+            color: var(--main-text);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .dot {
+            display: inline-block;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        .field label {
+            display: block;
+            color: var(--secondary-text);
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr .7fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .field select {
+            width: 100%;
+        }
+
+        .primary {
+            background: var(--primary);
+            color: #FFFFFF;
+            border: 0;
+            border-radius: 6px;
+            padding: 9px 16px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background 0.15s ease;
+        }
+
+        .primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .result {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-top: 14px;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 6px;
+            background: #FAFCFA;
+            color: var(--main-text);
+        }
+
+        .result strong {
+            font-size: 18px;
+            color: var(--high-risk);
+        }
+
+        .result p {
+            margin: 4px 0;
+            font-size: 13px;
+        }
+
+        .weather {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .day {
+            text-align: center;
+            padding: 14px 6px;
+            border-right: 1px solid var(--border);
+            background: #FFFFFF;
+        }
+
+        .day:last-child {
+            border: 0;
+        }
+
+        .day small {
+            color: var(--secondary-text);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .day b {
+            display: block;
+            font-size: 18px;
+            color: var(--main-text);
+            margin: 6px 0;
+        }
+
+        .day p {
+            font-size: 11px;
+            color: var(--secondary-text);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .lower {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 14px;
+            margin-top: 0;
+        }
+
+        .lower .panel {
+            margin-bottom: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+
+        td,
+        th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        th {
+            color: var(--secondary-text);
+            font-weight: 600;
+            background: #FAFCFA;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        td {
+            color: var(--main-text);
+        }
+
+        tr:hover td {
+            background: #F8FAF7;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .High {
+            color: #C94C4C;
+            background: #FCE8E8;
+            border: 1px solid #F4B8B8;
+        }
+
+        .Medium {
+            color: #A36F15;
+            background: #FEF3DC;
+            border: 1px solid #F5D79E;
+        }
+
+        .Low {
+            color: #4F9468;
+            background: #E8F5EE;
+            border: 1px solid #C5E5D3;
+        }
+
+        .alert {
+            padding: 11px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--main-text);
+        }
+
+        .alert strong {
+            color: var(--main-text);
+        }
+
+        .alert small {
+            display: block;
+            color: var(--secondary-text);
+            margin-top: 4px;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .status {
+            color: var(--secondary-text);
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .toast {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--sidebar);
+            color: #FFFFFF;
+            padding: 12px 18px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(36, 80, 90, 0.18);
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 10;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        /* Risk Map Page Custom Styles */
+        .district-map-lbl {
+            font-size: 10px;
+            font-weight: 600;
+            fill: #FFFFFF;
+            text-anchor: middle;
+            dominant-baseline: central;
+            pointer-events: none;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.75);
+        }
+
+        .district.selected {
+            stroke: var(--sidebar) !important;
+            stroke-width: 3.5px !important;
+            filter: drop-shadow(0 0 6px rgba(36, 80, 90, 0.5));
+        }
+
+        .district.dimmed {
+            opacity: 0.22;
+        }
+
+        .rm-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: transform 0.1s ease, box-shadow 0.1s ease;
+        }
+
+        .rm-pill:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(38, 51, 45, 0.12);
+        }
+
+        .rm-pill.High {
+            background: #FCE8E8;
+            color: #C94C4C;
+            border-color: #F4B8B8;
+        }
+
+        .rm-pill.Medium {
+            background: #FEF3DC;
+            color: #A36F15;
+            border-color: #F5D79E;
+        }
+
+        .rm-pill.Low {
+            background: #E8F5EE;
+            color: #4F9468;
+            border-color: #C5E5D3;
+        }
+
+        .rm-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 14px;
+        }
+
+        @media(max-width: 950px) {
+            .rm-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width:1050px) {
+            .cards {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lower {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .lower .panel:last-child {
+                grid-column: span 2;
+            }
+        }
+
+        @media(max-width:650px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            aside {
+                display: flex;
+                overflow: auto;
+                position: sticky;
+                top: 65px;
+                z-index: 2;
+                padding: 6px;
+            }
+
+            aside .nav {
+                white-space: nowrap;
+                width: auto;
+                padding: 8px 12px;
+            }
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            main {
+                padding: 12px;
+            }
+
+            .controls {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .lower {
+                grid-template-columns: 1fr;
+            }
+
+            .lower .panel:last-child {
+                grid-column: auto;
+            }
+
+            .weather {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .day:nth-child(2) {
+                border-right: 0;
+            }
+
+            .day:nth-child(-n+2) {
+                border-bottom: 1px solid var(--border);
+            }
+
+            header {
+                gap: 10px;
+            }
+
+            .subtitle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="brand"><i>♨</i> PreBurn</div>
+        <div class="subtitle">
+            Stubble Burning Prediction &amp; Monitoring System
+            <small>Cleaner Air | Healthier Tomorrow</small>
+        </div>
+        <input type="date" id="date" value="2025-10-15">
+        <select id="topState" onchange="setState(this.value)">
+            <option>Punjab & Haryana</option>
+            <option>Punjab</option>
+            <option>Haryana</option>
+        </select>
+    </header>
+
+    <div class="layout">
+        <aside>
+            <button class="nav active" onclick="page('Overview',this)">⌂ &nbsp; Overview</button>
+            <button class="nav" onclick="page('Risk Map',this)">▧ &nbsp; Risk Map</button>
+            <button class="nav" onclick="page('Prediction',this)">▤ &nbsp; Prediction</button>
+            <button class="nav" onclick="page('Weather',this)">☁ &nbsp; Weather</button>
+            <button class="nav" onclick="page('Fire Detections',this)">♨ &nbsp; Fire Detections</button>
+            <button class="nav" onclick="page('Alerts',this)">♟ &nbsp; Alerts</button>
+            <button class="nav" onclick="page('Data & Model',this)">▥ &nbsp; Data &amp; Model</button>
+            <button class="nav" onclick="page('Settings',this)">⚙ &nbsp; Settings</button>
+        </aside>
+
+        <main>
+
+            <section class="page active" id="Overview">
+                <div class="heading">
+                    <div>
+                        <h2>Overview Dashboard</h2>
+                        <span class="muted">District-level monitoring and 3–5 day risk outlook</span>
+                    </div>
+                    <span class="muted" id="liveIndicator">⚡ Backend Connected</span>
+                </div>
+
+                <div class="cards">
+                    <div class="metric"><label>🔴 High-Risk Areas</label><b id="kpiHigh">--</b><small id="kpiHighSub">Loading...</small>
+                    </div>
+                    <div class="metric"><label>🟠 Medium-Risk Areas</label><b id="kpiMed">--</b><small id="kpiMedSub">Loading...</small>
+                    </div>
+                    <div class="metric"><label>🟢 Low-Risk Areas</label><b id="kpiLow">--</b><small id="kpiLowSub">Loading...</small></div>
+                    <div class="metric"><label>🛰 Active Fire Detections</label><b id="kpiFires">--</b><small id="kpiFiresSub">last 7 days</small>
+                    </div>
+                    <div class="metric"><label>▦ Forecast Period</label><b id="kpiForecast">3–5 days</b><small>ML prediction</small>
+                    </div>
+                </div>
+
+                <div class="grid">
+
+                    <div class="panel">
+                        <div class="ph">🗺 Stubble Burning Risk Map <span class="muted">Punjab & Haryana</span></div>
+                        <div class="pb">
+
+                            <div class="map" id="map">
+                                <svg viewBox="0 0 400 470">
+
+                                    <path class="district" data-d="Amritsar" fill="#C94C4C"
+                                        d="M105 20L165 12 188 48 150 83 92 65Z" />
+
+                                    <path class="district" data-d="Gurdaspur" fill="#D89A32"
+                                        d="M165 12L225 35 235 75 188 48Z" />
+
+                                    <path class="district" data-d="Jalandhar" fill="#C94C4C"
+                                        d="M92 65L150 83 235 75 244 126 180 143 120 120Z" />
+
+                                    <path class="district" data-d="Ludhiana" fill="#C94C4C"
+                                        d="M120 120L180 143 244 126 278 166 228 210 158 194 112 160Z" />
+
+                                    <path class="district" data-d="Kapurthala" fill="#4F9468"
+                                        d="M92 65L120 120 112 160 66 144 52 102Z" />
+
+                                    <path class="district" data-d="Bathinda" fill="#D89A32"
+                                        d="M66 144L112 160 158 194 145 250 83 252 40 205Z" />
+
+                                    <path class="district" data-d="Patiala" fill="#D89A32"
+                                        d="M158 194L228 210 252 254 202 280 145 250Z" />
+
+                                    <path class="district" data-d="Sangrur" fill="#D89A32"
+                                        d="M112 160L158 194 145 250 202 280 174 315 108 300 83 252Z" />
+
+                                    <path class="district" data-d="Fazilka" fill="#4F9468"
+                                        d="M40 205L83 252 108 300 86 332 32 290 18 244Z" />
+
+                                    <path class="district" data-d="Sirsa" fill="#D89A32"
+                                        d="M86 332L108 300 174 315 190 365 135 390 82 370Z" />
+
+                                    <path class="district" data-d="Hisar" fill="#D89A32"
+                                        d="M174 315L202 280 252 254 282 300 258 350 190 365Z" />
+
+                                    <path class="district" data-d="Karnal" fill="#4F9468"
+                                        d="M252 254L293 240 328 276 310 322 282 300Z" />
+
+                                    <path class="district" data-d="Panipat" fill="#4F9468"
+                                        d="M282 300L310 322 328 357 290 382 258 350Z" />
+
+                                    <path class="district" data-d="Rohtak" fill="#4F9468"
+                                        d="M190 365L258 350 290 382 258 425 198 416 135 390Z" />
+
+                                </svg>
+
+                                <div class="legend">
+                                    <span><i class="dot" style="background:#C94C4C"></i>High Risk</span><br>
+                                    <span><i class="dot" style="background:#D89A32"></i>Medium Risk</span><br>
+                                    <span><i class="dot" style="background:#4F9468"></i>Low Risk</span><br>
+                                    ♨ Fire location
+                                </div>
+
+                                <span class="muted" style="position:absolute;bottom:10px;left:10px">
+                                    ▲ N · Schematic map — click a district
+                                </span>
+                            </div>
+
+                            <p class="status">Map boundaries are illustrative. Select a district to run a demo
+                                prediction.</p>
+
+                        </div>
+                    </div>
+
+                    <div>
+
+                        <div class="panel">
+                            <div class="ph">📈 Risk Prediction <span class="muted">3–5 Day Forecast</span></div>
+
+                            <div class="pb">
+                                <div class="controls">
+
+                                    <div class="field">
+                                        <label>State</label>
+                                        <select id="state" onchange="updateDistricts()">
+                                            <option>Punjab</option>
+                                            <option>Haryana</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="field">
+                                        <label>District</label>
+                                        <select id="district"></select>
+                                    </div>
+
+                                    <div class="field">
+                                        <label>Days</label>
+                                        <select id="days">
+                                            <option value="3">3 Days</option>
+                                            <option value="4">4 Days</option>
+                                            <option value="5">5 Days</option>
+                                        </select>
+                                    </div>
+
+                                    <button class="primary" onclick="predict()">Predict Risk</button>
+                                </div>
+
+                                <div class="result" id="result">
+                                    <div>
+                                        <strong id="risk">▲ High Risk</strong>
+                                        <p id="where">Ludhiana, Punjab</p>
+                                        Probability: <b id="prob">87%</b>
+                                    </div>
+
+                                    <div>
+                                        <b>♨ Burning risk window</b>
+                                        <p id="window">Within 3 days</p>
+                                        <small class="muted">Illustrative output</small>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="ph">☁ Weather Forecast <span class="muted" id="weatherLoc">Ludhiana</span></div>
+                            <div class="weather" id="weather"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="lower">
+
+                    <div class="panel">
+                        <div class="ph">♨ Fire Detections <span class="muted">Last 7 Days</span></div>
+                        <div class="pb">
+                            <svg id="chart" viewBox="0 0 420 170" style="width:100%;height:170px"></svg>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="ph">🎯 Predicted Risk Areas</div>
+                        <div style="overflow:auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>District</th>
+                                        <th>State</th>
+                                        <th>Risk</th>
+                                        <th>Prob.</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="riskRows"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="ph">
+                            🔔 Recent Alerts
+                            <button class="nav" style="width:auto;padding:2px" onclick="page('Alerts')">View all
+                                →</button>
+                        </div>
+                        <div class="pb" id="recentAlerts"></div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="page" id="Risk Map">
+                <div class="heading">
+                    <div>
+                        <h2>Stubble Burning Risk Map</h2>
+                        <span class="muted">Geographic Risk Distribution · Punjab &amp; Haryana (38 Districts) · 3–5 Day Forecast Horizon</span>
+                    </div>
+                    <span class="muted">● Live Regional Telemetry</span>
+                </div>
+
+                <!-- 1. Risk Summary Strip -->
+                <div class="cards" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 16px;">
+                    <div class="panel" style="margin-bottom:0;border-top:3px solid var(--high-risk);">
+                        <div class="ph" style="background:#FFF8F8;display:flex;justify-content:space-between;align-items:center;">
+                            <span style="color:var(--high-risk);font-weight:700;">🔴 High Risk</span>
+                            <b id="rmHighCount" style="color:var(--high-risk);font-size:16px;">--</b>
+                        </div>
+                        <div class="pb" style="padding:10px 12px;">
+                            <div class="muted" style="font-size:11px;margin-bottom:6px;">Probability &ge; 65% · Urgent Intervention Required</div>
+                            <div id="rmHighList" style="display:flex;flex-wrap:wrap;gap:4px;max-height:85px;overflow-y:auto;"></div>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="margin-bottom:0;border-top:3px solid var(--med-risk);">
+                        <div class="ph" style="background:#FFFAF2;display:flex;justify-content:space-between;align-items:center;">
+                            <span style="color:#A36F15;font-weight:700;">🟠 Medium Risk</span>
+                            <b id="rmMedCount" style="color:var(--med-risk);font-size:16px;">--</b>
+                        </div>
+                        <div class="pb" style="padding:10px 12px;">
+                            <div class="muted" style="font-size:11px;margin-bottom:6px;">Probability 40%–64% · Close Field Monitoring</div>
+                            <div id="rmMedList" style="display:flex;flex-wrap:wrap;gap:4px;max-height:85px;overflow-y:auto;"></div>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="margin-bottom:0;border-top:3px solid var(--low-risk);">
+                        <div class="ph" style="background:#F4FAF6;display:flex;justify-content:space-between;align-items:center;">
+                            <span style="color:var(--primary);font-weight:700;">🟢 Low Risk</span>
+                            <b id="rmLowCount" style="color:var(--low-risk);font-size:16px;">--</b>
+                        </div>
+                        <div class="pb" style="padding:10px 12px;">
+                            <div class="muted" style="font-size:11px;margin-bottom:6px;">Probability &lt; 40% · Baseline Risk / Stable</div>
+                            <div id="rmLowList" style="display:flex;flex-wrap:wrap;gap:4px;max-height:85px;overflow-y:auto;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Main Risk Map Layout (Map + Detail Panel) -->
+                <div class="rm-grid">
+                    <!-- Left: Interactive Map -->
+                    <div class="panel" style="margin-bottom:0;">
+                        <div class="ph">
+                            <div>
+                                🗺 Regional Risk Distribution Map
+                                <span class="muted" style="margin-left:6px;">Punjab &amp; Haryana</span>
+                            </div>
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                <select id="rmStateFilter" onchange="applyRiskMapFilter()" style="padding:3px 8px;font-size:12px;">
+                                    <option value="All">All States (38)</option>
+                                    <option value="Punjab">Punjab (22)</option>
+                                    <option value="Haryana">Haryana (16)</option>
+                                </select>
+                                <select id="rmRiskFilter" onchange="applyRiskMapFilter()" style="padding:3px 8px;font-size:12px;">
+                                    <option value="All">All Risk Levels</option>
+                                    <option value="High">High Risk</option>
+                                    <option value="Medium">Medium Risk</option>
+                                    <option value="Low">Low Risk</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="pb" style="position:relative;background:#F8FAF7;">
+                            <div class="legend" style="position:absolute;top:24px;right:24px;z-index:2;background:rgba(255,255,255,0.96);padding:8px 12px;border:1px solid var(--border);border-radius:6px;box-shadow:0 1px 4px rgba(38,51,45,0.06);font-size:11px;">
+                                <span><i class="dot" style="background:#C94C4C"></i>High Risk (&ge;65%)</span><br>
+                                <span><i class="dot" style="background:#D89A32"></i>Medium Risk (40–64%)</span><br>
+                                <span><i class="dot" style="background:#4F9468"></i>Low Risk (&lt;40%)</span>
+                            </div>
+                            <div class="map" id="riskMapContainer" style="height:auto;min-height:540px;background:#EDF3EC;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+<svg viewBox="0 0 640 700" class="risk-map-svg" id="rmSvgMap" style="width:100%;height:auto;max-height:550px;display:block;">
+  <!-- State watermark labels -->
+  <text x="180" y="60" fill="#214E3B" font-size="18" font-weight="700" letter-spacing="3" opacity="0.18">PUNJAB REGION</text>
+  <text x="450" y="670" fill="#214E3B" font-size="18" font-weight="700" letter-spacing="3" opacity="0.18">HARYANA REGION</text>
+  <g class="district-cell" data-d="Ambala" data-state="Haryana">
+    <path class="district" data-d="Ambala" data-state="Haryana" fill="#4F9468" d="M523.5,362.0L553.7,302.8L463.1,319.1L460.5,322.7L465.8,376.3Z"><title>Ambala (Haryana)</title></path>
+    <text x="490.6" y="338.6" class="district-map-lbl">Ambala</text>
+  </g>
+  <g class="district-cell" data-d="Bhiwani" data-state="Haryana">
+    <path class="district" data-d="Bhiwani" data-state="Haryana" fill="#4F9468" d="M425.9,536.8L436.6,581.0L366.0,685L184.0,685L385.8,523.6Z"><title>Bhiwani (Haryana)</title></path>
+    <text x="398.3" y="570.6" class="district-map-lbl">Bhiwani</text>
+  </g>
+  <g class="district-cell" data-d="Faridabad" data-state="Haryana">
+    <path class="district" data-d="Faridabad" data-state="Haryana" fill="#4F9468" d="M507.4,685L625,685L625,675.0L625,494.2L625,495.6L555.5,578.3Z"><title>Faridabad (Haryana)</title></path>
+    <text x="569.1" y="625.1" class="district-map-lbl">Faridabad</text>
+  </g>
+  <g class="district-cell" data-d="Fatehabad" data-state="Haryana">
+    <path class="district" data-d="Fatehabad" data-state="Haryana" fill="#4F9468" d="M368.3,447.1L366.5,455.0L264.7,530.1L269.2,432.9L349.1,422.9L363.3,430.5Z"><title>Fatehabad (Haryana)</title></path>
+    <text x="298.4" y="464.2" class="district-map-lbl">Fatehabad</text>
+  </g>
+  <g class="district-cell" data-d="Gurugram" data-state="Haryana">
+    <path class="district" data-d="Gurugram" data-state="Haryana" fill="#4F9468" d="M420.4,685L511.1,579.2L555.5,578.3L507.4,685Z"><title>Gurugram (Haryana)</title></path>
+    <text x="526.9" y="617.7" class="district-map-lbl">Gurugram</text>
+  </g>
+  <g class="district-cell" data-d="Hisar" data-state="Haryana">
+    <path class="district" data-d="Hisar" data-state="Haryana" fill="#4F9468" d="M385.8,523.6L184.0,685L140.7,685L264.7,530.1L366.5,455.0Z"><title>Hisar (Haryana)</title></path>
+    <text x="337.6" y="517.4" class="district-map-lbl">Hisar</text>
+  </g>
+  <g class="district-cell" data-d="Jhajjar" data-state="Haryana">
+    <path class="district" data-d="Jhajjar" data-state="Haryana" fill="#4F9468" d="M420.4,685L366.0,685L436.6,581.0L501.0,569.9L511.1,579.2Z"><title>Jhajjar (Haryana)</title></path>
+    <text x="473.2" y="596.4" class="district-map-lbl">Jhajjar</text>
+  </g>
+  <g class="district-cell" data-d="Jind" data-state="Haryana">
+    <path class="district" data-d="Jind" data-state="Haryana" fill="#4F9468" d="M368.3,447.1L366.5,455.0L385.8,523.6L425.9,536.8L472.6,504.5L468.0,464.5Z"><title>Jind (Haryana)</title></path>
+    <text x="423.7" y="493.1" class="district-map-lbl">Jind</text>
+  </g>
+  <g class="district-cell" data-d="Kaithal" data-state="Haryana">
+    <path class="district" data-d="Kaithal" data-state="Haryana" fill="#4F9468" d="M478.5,432.5L461.0,382.8L400.3,384.2L363.3,430.5L368.3,447.1L468.0,464.5L473.7,456.6Z"><title>Kaithal (Haryana)</title></path>
+    <text x="435.9" y="422.5" class="district-map-lbl">Kaithal</text>
+  </g>
+  <g class="district-cell" data-d="Karnal" data-state="Haryana">
+    <path class="district" data-d="Karnal" data-state="Haryana" fill="#4F9468" d="M478.5,432.5L542.2,407.4L625,472.4L473.7,456.6Z"><title>Karnal (Haryana)</title></path>
+    <text x="521.6" y="439.4" class="district-map-lbl">Karnal</text>
+  </g>
+  <g class="district-cell" data-d="Kurukshetra" data-state="Haryana">
+    <path class="district" data-d="Kurukshetra" data-state="Haryana" fill="#4F9468" d="M478.5,432.5L461.0,382.8L465.8,376.3L523.5,362.0L542.2,407.4Z"><title>Kurukshetra (Haryana)</title></path>
+    <text x="505.4" y="398.1" class="district-map-lbl">Kurukshetra</text>
+  </g>
+  <g class="district-cell" data-d="Panipat" data-state="Haryana">
+    <path class="district" data-d="Panipat" data-state="Haryana" fill="#4F9468" d="M473.7,456.6L468.0,464.5L472.6,504.5L488.0,515.5L625,489.6L625,472.4Z"><title>Panipat (Haryana)</title></path>
+    <text x="517.7" y="482.2" class="district-map-lbl">Panipat</text>
+  </g>
+  <g class="district-cell" data-d="Rohtak" data-state="Haryana">
+    <path class="district" data-d="Rohtak" data-state="Haryana" fill="#4F9468" d="M425.9,536.8L436.6,581.0L501.0,569.9L488.0,515.5L472.6,504.5Z"><title>Rohtak (Haryana)</title></path>
+    <text x="466.0" y="554.3" class="district-map-lbl">Rohtak</text>
+  </g>
+  <g class="district-cell" data-d="Sirsa" data-state="Haryana">
+    <path class="district" data-d="Sirsa" data-state="Haryana" fill="#4F9468" d="M269.2,432.9L264.7,530.1L140.7,685L15,685L15,680.9L141.2,425.0L145.4,422.8L241.6,410.8Z"><title>Sirsa (Haryana)</title></path>
+    <text x="237.3" y="461.3" class="district-map-lbl">Sirsa</text>
+  </g>
+  <g class="district-cell" data-d="Sonipat" data-state="Haryana">
+    <path class="district" data-d="Sonipat" data-state="Haryana" fill="#4F9468" d="M511.1,579.2L501.0,569.9L488.0,515.5L625,489.6L625,495.6L555.5,578.3Z"><title>Sonipat (Haryana)</title></path>
+    <text x="525.2" y="540.1" class="district-map-lbl">Sonipat</text>
+  </g>
+  <g class="district-cell" data-d="Yamunanagar" data-state="Haryana">
+    <path class="district" data-d="Yamunanagar" data-state="Haryana" fill="#4F9468" d="M542.2,407.4L523.5,362.0L553.7,302.8L625,124.9L625,494.2L625,495.6L625,489.6L625,472.4Z"><title>Yamunanagar (Haryana)</title></path>
+    <text x="561.8" y="374.9" class="district-map-lbl">Yamunanagar</text>
+  </g>
+  <g class="district-cell" data-d="Amritsar" data-state="Punjab">
+    <path class="district" data-d="Amritsar" data-state="Punjab" fill="#4F9468" d="M146.9,189.8L15,131.3L15,61.9L15,25.0L15,15L64.9,15L266.6,143.9L260.0,157.2Z"><title>Amritsar (Punjab)</title></path>
+    <text x="214.5" y="156.0" class="district-map-lbl">Amritsar</text>
+  </g>
+  <g class="district-cell" data-d="Barnala" data-state="Punjab">
+    <path class="district" data-d="Barnala" data-state="Punjab" fill="#4F9468" d="M269.8,354.5L261.8,326.5L309.7,285.3L351.2,310.1L321.3,374.7Z"><title>Barnala (Punjab)</title></path>
+    <text x="312.3" y="338.1" class="district-map-lbl">Barnala</text>
+  </g>
+  <g class="district-cell" data-d="Bathinda" data-state="Punjab">
+    <path class="district" data-d="Bathinda" data-state="Punjab" fill="#4F9468" d="M239.1,318.0L261.8,326.5L269.8,354.5L241.6,410.8L145.4,422.8L200.3,333.6Z"><title>Bathinda (Punjab)</title></path>
+    <text x="225.1" y="362.9" class="district-map-lbl">Bathinda</text>
+  </g>
+  <g class="district-cell" data-d="Faridkot" data-state="Punjab">
+    <path class="district" data-d="Faridkot" data-state="Punjab" fill="#4F9468" d="M239.1,318.0L219.0,258.6L164.4,290.8L200.3,333.6Z"><title>Faridkot (Punjab)</title></path>
+    <text x="198.0" y="295.2" class="district-map-lbl">Faridkot</text>
+  </g>
+  <g class="district-cell" data-d="Fatehgarh Sahib" data-state="Punjab">
+    <path class="district" data-d="Fatehgarh Sahib" data-state="Punjab" fill="#4F9468" d="M463.1,319.1L460.5,322.7L389.3,320.2L382.5,310.8L399.9,273.7L416.6,264.0L456.3,280.8Z"><title>Fatehgarh Sahib (Punjab)</title></path>
+    <text x="435.7" y="299.4" class="district-map-lbl">Fatehgarh Sahib</text>
+  </g>
+  <g class="district-cell" data-d="Fazilka" data-state="Punjab">
+    <path class="district" data-d="Fazilka" data-state="Punjab" fill="#4F9468" d="M141.2,425.0L15,680.9L15,675.0L15,61.9L15,131.3L120.4,281.5Z"><title>Fazilka (Punjab)</title></path>
+    <text x="91.9" y="334.9" class="district-map-lbl">Fazilka</text>
+  </g>
+  <g class="district-cell" data-d="Firozpur" data-state="Punjab">
+    <path class="district" data-d="Firozpur" data-state="Punjab" fill="#4F9468" d="M219.0,258.6L223.5,235.0L146.9,189.8L15,131.3L120.4,281.5L164.4,290.8Z"><title>Firozpur (Punjab)</title></path>
+    <text x="176.8" y="259.3" class="district-map-lbl">Firozpur</text>
+  </g>
+  <g class="district-cell" data-d="Gurdaspur" data-state="Punjab">
+    <path class="district" data-d="Gurdaspur" data-state="Punjab" fill="#4F9468" d="M317.0,145.6L344.9,118.1L128.6,15L64.9,15L266.6,143.9L316.4,145.8Z"><title>Gurdaspur (Punjab)</title></path>
+    <text x="291.8" y="96.6" class="district-map-lbl">Gurdaspur</text>
+  </g>
+  <g class="district-cell" data-d="Hoshiarpur" data-state="Punjab">
+    <path class="district" data-d="Hoshiarpur" data-state="Punjab" fill="#4F9468" d="M356.9,212.6L455.7,162.6L568.8,38.3L344.9,118.1L317.0,145.6Z"><title>Hoshiarpur (Punjab)</title></path>
+    <text x="365.7" y="171.5" class="district-map-lbl">Hoshiarpur</text>
+  </g>
+  <g class="district-cell" data-d="Jalandhar" data-state="Punjab">
+    <path class="district" data-d="Jalandhar" data-state="Punjab" fill="#4F9468" d="M356.9,212.6L317.0,145.6L316.4,145.8L290.3,240.3L305.6,252.3L354.0,220.4Z"><title>Jalandhar (Punjab)</title></path>
+    <text x="316.5" y="200.8" class="district-map-lbl">Jalandhar</text>
+  </g>
+  <g class="district-cell" data-d="Kapurthala" data-state="Punjab">
+    <path class="district" data-d="Kapurthala" data-state="Punjab" fill="#4F9468" d="M290.3,240.3L249.2,225.1L260.0,157.2L266.6,143.9L316.4,145.8Z"><title>Kapurthala (Punjab)</title></path>
+    <text x="288.1" y="192.9" class="district-map-lbl">Kapurthala</text>
+  </g>
+  <g class="district-cell" data-d="Ludhiana" data-state="Punjab">
+    <path class="district" data-d="Ludhiana" data-state="Punjab" fill="#4F9468" d="M382.5,310.8L351.2,310.1L309.7,285.3L305.6,252.3L354.0,220.4L399.9,273.7Z"><title>Ludhiana (Punjab)</title></path>
+    <text x="357.3" y="262.6" class="district-map-lbl">Ludhiana</text>
+  </g>
+  <g class="district-cell" data-d="Mansa" data-state="Punjab">
+    <path class="district" data-d="Mansa" data-state="Punjab" fill="#4F9468" d="M269.2,432.9L349.1,422.9L321.3,374.7L269.8,354.5L241.6,410.8Z"><title>Mansa (Punjab)</title></path>
+    <text x="289.8" y="395.4" class="district-map-lbl">Mansa</text>
+  </g>
+  <g class="district-cell" data-d="Moga" data-state="Punjab">
+    <path class="district" data-d="Moga" data-state="Punjab" fill="#4F9468" d="M239.1,318.0L261.8,326.5L309.7,285.3L305.6,252.3L290.3,240.3L249.2,225.1L223.5,235.0L219.0,258.6Z"><title>Moga (Punjab)</title></path>
+    <text x="257.9" y="274.9" class="district-map-lbl">Moga</text>
+  </g>
+  <g class="district-cell" data-d="Muktsar" data-state="Punjab">
+    <path class="district" data-d="Muktsar" data-state="Punjab" fill="#4F9468" d="M200.3,333.6L145.4,422.8L141.2,425.0L120.4,281.5L164.4,290.8Z"><title>Muktsar (Punjab)</title></path>
+    <text x="162.9" y="324.6" class="district-map-lbl">Muktsar</text>
+  </g>
+  <g class="district-cell" data-d="Nawanshahr" data-state="Punjab">
+    <path class="district" data-d="Nawanshahr" data-state="Punjab" fill="#4F9468" d="M399.9,273.7L354.0,220.4L356.9,212.6L455.7,162.6L416.6,264.0Z"><title>Nawanshahr (Punjab)</title></path>
+    <text x="395.2" y="229.9" class="district-map-lbl">Nawanshahr</text>
+  </g>
+  <g class="district-cell" data-d="Pathankot" data-state="Punjab">
+    <path class="district" data-d="Pathankot" data-state="Punjab" fill="#4F9468" d="M568.8,38.3L625,15L128.6,15L344.9,118.1Z"><title>Pathankot (Punjab)</title></path>
+    <text x="327.2" y="63.6" class="district-map-lbl">Pathankot</text>
+  </g>
+  <g class="district-cell" data-d="Patiala" data-state="Punjab">
+    <path class="district" data-d="Patiala" data-state="Punjab" fill="#4F9468" d="M461.0,382.8L400.3,384.2L389.3,320.2L460.5,322.7L465.8,376.3Z"><title>Patiala (Punjab)</title></path>
+    <text x="434.1" y="344.2" class="district-map-lbl">Patiala</text>
+  </g>
+  <g class="district-cell" data-d="Rupnagar" data-state="Punjab">
+    <path class="district" data-d="Rupnagar" data-state="Punjab" fill="#4F9468" d="M625,76.4L625,25.0L625,15L568.8,38.3L455.7,162.6L416.6,264.0L456.3,280.8Z"><title>Rupnagar (Punjab)</title></path>
+    <text x="455.3" y="253.1" class="district-map-lbl">Rupnagar</text>
+  </g>
+  <g class="district-cell" data-d="SAS Nagar (Mohali)" data-state="Punjab">
+    <path class="district" data-d="SAS Nagar (Mohali)" data-state="Punjab" fill="#4F9468" d="M625,124.9L553.7,302.8L463.1,319.1L456.3,280.8L625,76.4Z"><title>SAS Nagar (Mohali) (Punjab)</title></path>
+    <text x="482.1" y="291.1" class="district-map-lbl">SAS Nagar</text>
+  </g>
+  <g class="district-cell" data-d="Sangrur" data-state="Punjab">
+    <path class="district" data-d="Sangrur" data-state="Punjab" fill="#4F9468" d="M363.3,430.5L349.1,422.9L321.3,374.7L351.2,310.1L382.5,310.8L389.3,320.2L400.3,384.2Z"><title>Sangrur (Punjab)</title></path>
+    <text x="355.1" y="357.9" class="district-map-lbl">Sangrur</text>
+  </g>
+  <g class="district-cell" data-d="Tarn Taran" data-state="Punjab">
+    <path class="district" data-d="Tarn Taran" data-state="Punjab" fill="#4F9468" d="M223.5,235.0L146.9,189.8L260.0,157.2L249.2,225.1Z"><title>Tarn Taran (Punjab)</title></path>
+    <text x="222.1" y="182.4" class="district-map-lbl">Tarn Taran</text>
+  </g>
+</svg>
+                            </div>
+                            <div class="status" style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;">
+                                <span>▲ N · Administrative geographic boundaries — click any district to view full risk telemetry</span>
+                                <span class="muted" id="rmLastUpdated">3–5 Day Horizon</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: District Telemetry & Directory -->
+                    <div>
+                        <!-- Selected District Card -->
+                        <div class="panel" id="rmSelectedDistrictCard">
+                            <div class="ph">
+                                <span>📍 Selected District Telemetry</span>
+                                <span class="tag High" id="rmDetailRiskBadge">High Risk</span>
+                            </div>
+                            <div class="pb">
+                                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;">
+                                    <div>
+                                        <h3 id="rmDetailName" style="margin:0;font-size:22px;color:var(--main-text);font-weight:700;">Ludhiana</h3>
+                                        <span id="rmDetailState" class="muted" style="font-size:13px;">Punjab</span>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <div style="font-size:11px;color:var(--secondary-text);text-transform:uppercase;letter-spacing:0.5px;font-weight:600;">Burning Probability</div>
+                                        <div id="rmDetailProb" style="font-size:28px;font-weight:700;color:var(--high-risk);line-height:1.2;">97.8%</div>
+                                    </div>
+                                </div>
+
+                                <div style="background:#FAFCFA;border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:12px;">
+                                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;">
+                                        <div>
+                                            <span class="muted">Prediction Window:</span>
+                                            <div id="rmDetailWindow" style="font-weight:600;color:var(--main-text);margin-top:2px;">Within 3–5 days</div>
+                                        </div>
+                                        <div>
+                                            <span class="muted">Model Confidence:</span>
+                                            <div id="rmDetailConfidence" style="font-weight:600;color:var(--main-text);margin-top:2px;">94.2% (Random Forest)</div>
+                                        </div>
+                                        <div>
+                                            <span class="muted">Agriculture Officer:</span>
+                                            <div id="rmDetailOfficer" style="font-weight:600;color:var(--main-text);margin-top:2px;">Agriculture Officer</div>
+                                        </div>
+                                        <div>
+                                            <span class="muted">Emergency Contact:</span>
+                                            <div id="rmDetailPhone" style="font-weight:600;color:var(--primary);margin-top:2px;">+919876543210</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="rmDetailAlertBox" style="padding:10px 12px;border-radius:6px;background:#FCE8E8;border:1px solid #F4B8B8;color:#A82C2C;font-size:12px;margin-bottom:12px;">
+                                    ⚠️ <strong>Early-Warning Alert:</strong> High risk of crop residue burning. SMS advisory dispatched to Agriculture Officer.
+                                </div>
+
+                                <div style="display:flex;gap:8px;">
+                                    <button class="primary" style="flex:1;" onclick="runPredictionFromMap()">Run ML Prediction</button>
+                                    <button class="nav" style="border:1px solid var(--border);padding:8px 14px;font-size:12px;color:var(--main-text);background:#FFFFFF;border-radius:6px;" onclick="viewInOverview()">Open in Overview →</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- District Directory Table -->
+                        <div class="panel" style="margin-bottom:0;">
+                            <div class="ph" style="display:flex;justify-content:space-between;align-items:center;">
+                                <span>📋 District Risk Directory (<span id="rmTableCount">38</span>)</span>
+                                <input id="rmSearchInput" placeholder="Search district..." oninput="filterRiskMapTable()" style="padding:3px 8px;font-size:12px;width:130px;border:1px solid var(--border);border-radius:4px;outline:none;">
+                            </div>
+                            <div style="max-height:225px;overflow:auto;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>District</th>
+                                            <th>State</th>
+                                            <th>Risk</th>
+                                            <th>Probability</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="rmTableRows"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page" id="Prediction">
+                <div class="heading">
+                    <h2>ML Risk Predictions</h2>
+                </div>
+
+                <div class="panel">
+                    <div class="ph">Prediction Controls</div>
+                    <div class="pb">
+
+                        <div class="toolbar">
+                            <select id="pstate" onchange="updatePD()">
+                                <option>Punjab</option>
+                                <option>Haryana</option>
+                            </select>
+
+                            <select id="pdistrict"></select>
+
+                            <select id="pdays">
+                                <option value="3">3 days</option>
+                                <option value="4">4 days</option>
+                                <option value="5">5 days</option>
+                            </select>
+
+                            <button class="primary" onclick="predictFull()">Run Prediction</button>
+                        </div>
+
+                        <div id="fullResult" class="result">
+                            Choose a district and run a demo prediction.
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="ph">District Risk Overview</div>
+                    <div style="overflow:auto">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>District</th>
+                                    <th>State</th>
+                                    <th>Risk</th>
+                                    <th>Probability</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allRows"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page" id="Weather">
+                <div class="heading">
+                    <h2>Weather</h2>
+                </div>
+
+                <div class="panel">
+                    <div class="ph">Weather Forecast · Demo values</div>
+                    <div class="pb">
+
+                        <select id="weatherSelect" onchange="onWeatherSelectChange(this.value)">
+                            <option>Ludhiana</option>
+                            <option>Patiala</option>
+                            <option>Amritsar</option>
+                            <option>Karnal</option>
+                            <option>Hisar</option>
+                            <option>Panipat</option>
+                        </select>
+
+                        <div class="weather" id="weatherPage"></div>
+
+                        <p class="status">
+                            Connect a verified weather source before treating these values as live forecasts.
+                        </p>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="page" id="Fire Detections">
+                <div class="heading">
+                    <h2>Fire Detections</h2>
+                </div>
+
+                <div class="panel">
+                    <div class="ph">Sample satellite observations</div>
+                    <div class="pb">
+
+                        <div class="toolbar">
+                            <input id="search" placeholder="Search district/state" oninput="filterFires()">
+
+                            <select id="fireState" onchange="filterFires()">
+                                <option value="">All states</option>
+                                <option>Punjab</option>
+                                <option>Haryana</option>
+                            </select>
+
+                            <button class="primary" onclick="exportCSV()">Export CSV</button>
+                        </div>
+
+                        <div style="overflow:auto">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>District</th>
+                                        <th>State</th>
+                                        <th>Satellite</th>
+                                        <th>Confidence</th>
+                                        <th>FRP</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fireRows"></tbody>
+                            </table>
+                        </div>
+
+                        <p class="status">Demo records. Import actual NASA FIRMS data in Data &amp; Model.</p>
+
+                    </div>
+                </div>
+            </section>
+
+            <section class="page" id="Alerts">
+                <div class="heading">
+                    <h2>Alerts &amp; Notifications</h2>
+                    <button class="primary" onclick="markAll()">Mark all read</button>
+                </div>
+
+                <div class="panel">
+                    <div class="ph">Alert inbox</div>
+                    <div class="pb" id="alerts"></div>
+                </div>
+            </section>
+
+            <section class="page" id="Data & Model">
+                <div class="heading">
+                    <div>
+                        <h2>Data Sources &amp; ML Architecture</h2>
+                        <span class="muted">PreBurn Predictive Modeling Pipeline · Multi-Source Agricultural &amp; Meteorological Feature Integration</span>
+                    </div>
+                    <span class="tag" style="background:var(--light-teal);color:var(--primary);border:1px solid #C4DDE2;">Random Forest v1.0</span>
+                </div>
+
+                <!-- 1. Four Core Data Sources -->
+                <div class="cards" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 16px;">
+                    <div class="panel" style="margin-bottom:0;">
+                        <div class="ph" style="font-size:12px;font-weight:700;color:var(--sidebar);">
+                            🛰 1. NASA FIRMS
+                        </div>
+                        <div class="pb" style="font-size:12px;">
+                            <div style="font-weight:600;color:var(--main-text);margin-bottom:4px;">Historical Fire Observations</div>
+                            <p class="muted" style="margin:0 0 8px 0;line-height:1.4;">
+                                Satellite-derived active fire coordinates and Fire Radiative Power (FRP).
+                            </p>
+                            <div style="background:#F8FAF7;padding:6px 8px;border-radius:4px;border:1px solid var(--border);font-size:11px;">
+                                <strong>Role in PreBurn:</strong> Serves as historical burning baseline &amp; ground-truth frequency. <em style="color:#C94C4C;">(Historical data only; not the predictive system).</em>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="margin-bottom:0;">
+                        <div class="ph" style="font-size:12px;font-weight:700;color:var(--sidebar);">
+                            ☁ 2. Weather Telemetry
+                        </div>
+                        <div class="pb" style="font-size:12px;">
+                            <div style="font-weight:600;color:var(--main-text);margin-bottom:4px;">Atmospheric Dynamics</div>
+                            <p class="muted" style="margin:0 0 8px 0;line-height:1.4;">
+                                Real-time and forecasted environmental parameters:
+                            </p>
+                            <ul style="margin:0;padding-left:16px;color:var(--secondary-text);line-height:1.6;font-size:11px;">
+                                <li><strong>Temperature:</strong> Surface heat driving drying</li>
+                                <li><strong>Humidity:</strong> Moisture index</li>
+                                <li><strong>Wind Speed:</strong> Fire spread catalyst</li>
+                                <li><strong>Rainfall:</strong> Natural burn suppressant</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="margin-bottom:0;">
+                        <div class="ph" style="font-size:12px;font-weight:700;color:var(--sidebar);">
+                            🌾 3. Crop Maturity
+                        </div>
+                        <div class="pb" style="font-size:12px;">
+                            <div style="font-weight:600;color:var(--main-text);margin-bottom:4px;">Harvest Readiness</div>
+                            <p class="muted" style="margin:0 0 8px 0;line-height:1.4;">
+                                Agro-phenological state of paddy crops across Punjab and Haryana districts:
+                            </p>
+                            <div style="background:#F8FAF7;padding:6px 8px;border-radius:4px;border:1px solid var(--border);font-size:11px;">
+                                <strong>Indicator:</strong> Maturation index (70%–100%). Peak readiness correlates directly with harvest commencement and immediate residue generation.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel" style="margin-bottom:0;">
+                        <div class="ph" style="font-size:12px;font-weight:700;color:var(--sidebar);">
+                            ⏳ 4. Sowing Deadline Pressure
+                        </div>
+                        <div class="pb" style="font-size:12px;">
+                            <div style="font-weight:600;color:var(--main-text);margin-bottom:4px;">Wheat Turnaround Window</div>
+                            <p class="muted" style="margin:0 0 8px 0;line-height:1.4;">
+                                Agronomic deadline pressure between Kharif paddy harvest and Rabi wheat sowing:
+                            </p>
+                            <div style="background:#F8FAF7;padding:6px 8px;border-radius:4px;border:1px solid var(--border);font-size:11px;">
+                                <strong>Pressure Index:</strong> Narrow 10–20 day window to prepare seedbeds before mid-November cutoff strongly incentivizes rapid stubble burning.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. End-to-End Pipeline Diagram -->
+                <div class="panel">
+                    <div class="ph">🔄 PreBurn End-to-End Predictive Pipeline</div>
+                    <div class="pb" style="background:#FAFCFA;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;text-align:center;">
+                            <div style="flex:1;min-width:130px;background:#FFFFFF;border:1px solid var(--border);border-radius:6px;padding:10px;">
+                                <div style="font-size:16px;margin-bottom:4px;">📂</div>
+                                <strong style="font-size:12px;color:var(--main-text);">4 Data Streams</strong>
+                                <div style="font-size:10px;color:var(--secondary-text);margin-top:2px;">NASA FIRMS + Weather + Crop + Sowing Pressure</div>
+                            </div>
+                            <div style="color:var(--secondary-teal);font-weight:bold;font-size:16px;">→</div>
+                            <div style="flex:1;min-width:130px;background:#FFFFFF;border:1px solid var(--border);border-radius:6px;padding:10px;">
+                                <div style="font-size:16px;margin-bottom:4px;">⚙️</div>
+                                <strong style="font-size:12px;color:var(--main-text);">Data Preprocessing</strong>
+                                <div style="font-size:10px;color:var(--secondary-text);margin-top:2px;">StandardScaler + Missing Imputation</div>
+                            </div>
+                            <div style="color:var(--secondary-teal);font-weight:bold;font-size:16px;">→</div>
+                            <div style="flex:1;min-width:130px;background:#FFFFFF;border:2px solid var(--primary);border-radius:6px;padding:10px;">
+                                <div style="font-size:16px;margin-bottom:4px;">🌲</div>
+                                <strong style="font-size:12px;color:var(--primary);">Random Forest Model</strong>
+                                <div style="font-size:10px;color:var(--secondary-text);margin-top:2px;">100 Trees · Scikit-Learn</div>
+                            </div>
+                            <div style="color:var(--secondary-teal);font-weight:bold;font-size:16px;">→</div>
+                            <div style="flex:1;min-width:130px;background:#FFFFFF;border:1px solid var(--border);border-radius:6px;padding:10px;">
+                                <div style="font-size:16px;margin-bottom:4px;">📈</div>
+                                <strong style="font-size:12px;color:var(--main-text);">Risk Probability</strong>
+                                <div style="font-size:10px;color:var(--secondary-text);margin-top:2px;">0–100% Probability</div>
+                            </div>
+                            <div style="color:var(--secondary-teal);font-weight:bold;font-size:16px;">→</div>
+                            <div style="flex:1;min-width:130px;background:#FFFFFF;border:1px solid var(--border);border-radius:6px;padding:10px;">
+                                <div style="font-size:16px;margin-bottom:4px;">🗓</div>
+                                <strong style="font-size:12px;color:var(--main-text);">3–5 Day Forecast</strong>
+                                <div style="font-size:10px;color:var(--secondary-text);margin-top:2px;">High / Med / Low Risk</div>
+                            </div>
+                            <div style="color:var(--secondary-teal);font-weight:bold;font-size:16px;">→</div>
+                            <div style="flex:1;min-width:130px;background:#FFFFFF;border:1px solid var(--border);border-radius:6px;padding:10px;">
+                                <div style="font-size:16px;margin-bottom:4px;">📱</div>
+                                <strong style="font-size:12px;color:var(--high-risk);">Officer Alert &amp; SMS</strong>
+                                <div style="font-size:10px;color:var(--secondary-text);margin-top:2px;">Automated Dispatch</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Model Architecture & Parameters + CSV Tool -->
+                <div class="grid">
+                    <div class="panel">
+                        <div class="ph">🧠 Scikit-Learn Random Forest Classifier</div>
+                        <div class="pb">
+                            <table style="margin-bottom:12px;">
+                                <tbody>
+                                    <tr>
+                                        <td style="width:40%;font-weight:600;">Model Architecture</td>
+                                        <td><code>RandomForestClassifier(n_estimators=100, max_depth=10, random_state=42)</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:600;">Prediction Horizon</td>
+                                        <td><strong>3–5 Days Ahead</strong> (configurable early warning window)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:600;">Model Output</td>
+                                        <td><strong>Burning Probability (%) + Risk Tier</strong> (High / Medium / Low)</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:600;">Risk Classification Rules</td>
+                                        <td>
+                                            <span class="tag High">High Risk: &ge;65%</span> &nbsp;
+                                            <span class="tag Medium">Medium Risk: 40%–64%</span> &nbsp;
+                                            <span class="tag Low">Low Risk: &lt;40%</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:600;">Input Features (7)</td>
+                                        <td><code>temperature, humidity, wind_speed, rainfall, crop_maturity, sowing_deadline_pressure, historical_burning_data</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight:600;">Model Performance</td>
+                                        <td><strong>89.2% Test Accuracy · 0.969 ROC-AUC</strong> (Synthetic agro-climatic training corpus)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div style="background:#E5EFF0;border-left:4px solid var(--primary);padding:10px 12px;border-radius:4px;font-size:12px;color:var(--sidebar);">
+                                <strong>System Note:</strong> NASA FIRMS observations provide empirical validation of historical fire density. The trained Random Forest model predicts upcoming risk 3–5 days ahead to enable preventative officer intervention before burning occurs.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="ph">📁 Inspect NASA FIRMS Historical CSV</div>
+                        <div class="pb">
+                            <p class="muted" style="margin-top:0;">
+                                Select any NASA FIRMS active fire CSV file to inspect observed historical fire records, coordinates, and Fire Radiative Power (FRP) directly in your browser:
+                            </p>
+                            <input type="file" accept=".csv,text/csv" onchange="loadCSV(this.files[0])" style="font-size:12px;margin-bottom:8px;">
+                            <p id="csvStatus" class="status" style="margin:4px 0 10px 0;">No file selected.</p>
+                            <div style="overflow:auto;max-height:175px;">
+                                <table id="preview"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page" id="Settings">
+                <div class="heading">
+                    <h2>Settings</h2>
+                </div>
+
+                <div class="panel">
+                    <div class="ph">Dashboard preferences</div>
+                    <div class="pb">
+
+                        <label>
+                            Default forecast horizon
+                            <select id="settingDays">
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                            days
+                        </label>
+
+                        &nbsp;
+
+                        <button class="primary" onclick="saveSettings()">Apply</button>
+
+                        <p class="status">Preferences apply for this session.</p>
+
+                    </div>
+                </div>
+            </section>
+
+            <footer class="muted" style="padding:16px 0;border-top:1px solid var(--border);margin-top:24px;text-align:center">
+                PreBurn · Predictive Early-Warning System for Stubble Burning in North India · Weather | Crop Maturity | Sowing-Deadline Pressure | ML Model
+            </footer>
+
+        </main>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <script>
+        // Centralized API Base URL Configuration
+        const API_BASE_URL = "http://127.0.0.1:8000/api/v1";
+
+        // In-memory cache for fast lookups & fallbacks
+        let geoStates = [];
+        let districtMap = {};    // lowercase district name -> district object
+        let idDistrictMap = {};  // district ID -> district object
+        let stateDistricts = { "Punjab": [], "Haryana": [] };
+        let currentPredictions = [];
+        let allFiresData = [];
+        let selectedDistrictName = "Ludhiana";
+
+        // UI Toast Notification helper
+        function toast(t, isError = false) {
+            const x = document.getElementById('toast');
+            if (!x) return;
+            x.textContent = t;
+            x.style.background = isError ? '#C94C4C' : '#24505A';
+            x.classList.add('show');
+            setTimeout(() => x.classList.remove('show'), 2400);
+        }
+
+        // Risk Level Helper
+        function level(p) {
+            return p >= 65 ? "High" : p >= 40 ? "Medium" : "Low";
+        }
+
+        function riskColor(l) {
+            return l === "High" ? "#C94C4C" : l === "Medium" ? "#D89A32" : "#4F9468";
+        }
+
+        // Tab Navigation
+        function page(n, b) {
+            document.querySelectorAll('.page').forEach(x =>
+                x.classList.toggle('active', x.id === n)
+            );
+            document.querySelectorAll('.nav').forEach(x =>
+                x.classList.remove('active')
+            );
+            if (b) b.classList.add('active');
+            else [...document.querySelectorAll('.nav')]
+                .find(x => x.textContent.includes(n))?.classList.add('active');
+        }
+
+        // 1. GEO DATA: Load States & Districts from Backend
+        async function loadGeoData() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/geo/states-districts`);
+                if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+                const data = await res.json();
+                geoStates = data.states || [];
+
+                districtMap = {};
+                idDistrictMap = {};
+                stateDistricts = { "Punjab": [], "Haryana": [] };
+
+                geoStates.forEach(s => {
+                    stateDistricts[s.name] = s.districts || [];
+                    (s.districts || []).forEach(d => {
+                        districtMap[d.name.toLowerCase()] = d;
+                        idDistrictMap[d.id] = d;
+                    });
+                });
+
+                updateDistricts();
+                updatePD();
+                populateWeatherSelect();
+            } catch (err) {
+                console.error("Failed to load geographic data from backend:", err);
+                toast("Could not reach backend API at " + API_BASE_URL, true);
+            }
+        }
+
+        function updateDistricts() {
+            const s = document.getElementById('state').value;
+            const list = stateDistricts[s] || [];
+            const el = document.getElementById('district');
+            if (el) {
+                el.innerHTML = list.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+            }
+        }
+
+        function updatePD() {
+            const s = document.getElementById('pstate').value;
+            const list = stateDistricts[s] || [];
+            const el = document.getElementById('pdistrict');
+            if (el) {
+                el.innerHTML = list.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+            }
+        }
+
+        function populateWeatherSelect() {
+            const el = document.getElementById('weatherSelect');
+            if (!el) return;
+            const dists = Object.values(idDistrictMap);
+            if (dists.length > 0) {
+                el.innerHTML = dists.map(d => `<option value="${d.id}">${d.name} (${d.state_name})</option>`).join('');
+            }
+        }
+
+        function setState(s) {
+            if (s !== "Punjab & Haryana") {
+                const stateEl = document.getElementById('state');
+                const pstateEl = document.getElementById('pstate');
+                if (stateEl) stateEl.value = s;
+                if (pstateEl) pstateEl.value = s;
+                updateDistricts();
+                updatePD();
+                predict();
+            }
+            loadOverviewStats(s);
+            const daysVal = document.getElementById('days')?.value || 3;
+            loadLatestPredictions(daysVal, s);
+        }
+
+        // 2. DASHBOARD STATISTICS: Overview KPIs
+        async function loadOverviewStats(stateFilter = "") {
+            try {
+                let url = `${API_BASE_URL}/analytics/overview-stats`;
+                if (stateFilter && stateFilter !== "Punjab & Haryana") {
+                    url += `?state=${encodeURIComponent(stateFilter)}`;
+                }
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                const highEl = document.getElementById('kpiHigh');
+                const highSub = document.getElementById('kpiHighSub');
+                const medEl = document.getElementById('kpiMed');
+                const medSub = document.getElementById('kpiMedSub');
+                const lowEl = document.getElementById('kpiLow');
+                const lowSub = document.getElementById('kpiLowSub');
+                const firesEl = document.getElementById('kpiFires');
+                const forecastEl = document.getElementById('kpiForecast');
+                const indEl = document.getElementById('liveIndicator');
+
+                if (highEl) highEl.textContent = data.high_risk_districts;
+                if (highSub) highSub.textContent = `out of ${data.total_districts} districts`;
+                if (medEl) medEl.textContent = data.medium_risk_districts;
+                if (medSub) medSub.textContent = `out of ${data.total_districts} districts`;
+                if (lowEl) lowEl.textContent = data.low_risk_districts;
+                if (lowSub) lowSub.textContent = `out of ${data.total_districts} districts`;
+                if (firesEl) firesEl.textContent = data.active_fire_detections_7d;
+                if (forecastEl) forecastEl.textContent = data.forecast_period || "3–5 days";
+                if (indEl) indEl.textContent = `⚡ Live Backend · ${data.last_updated || "Connected"}`;
+            } catch (err) {
+                console.error("Overview stats error:", err);
+            }
+        }
+
+        // 3. RISK PREDICTIONS: Single Prediction & Latest Overview Tables
+        async function predict() {
+            const districtEl = document.getElementById('district');
+            const stateEl = document.getElementById('state');
+            const daysEl = document.getElementById('days');
+
+            const distId = Number(districtEl?.value);
+            const distObj = idDistrictMap[distId];
+            const distName = distObj ? distObj.name : districtEl?.options[districtEl.selectedIndex]?.text || "Ludhiana";
+            const stateName = distObj ? distObj.state_name : stateEl?.value || "Punjab";
+            const horizon = Number(daysEl?.value) || 3;
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/predictions/predict`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        district_id: distId || null,
+                        district_name: distName,
+                        state_name: stateName,
+                        horizon_days: horizon
+                    })
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+
+                const riskEl = document.getElementById('risk');
+                const whereEl = document.getElementById('where');
+                const probEl = document.getElementById('prob');
+                const windowEl = document.getElementById('window');
+                const weatherLoc = document.getElementById('weatherLoc');
+
+                const l = data.risk_level;
+                const sym = l === "High" ? "▲ " : l === "Medium" ? "● " : "✓ ";
+
+                if (riskEl) {
+                    riskEl.textContent = sym + l + " Risk";
+                    riskEl.style.color = riskColor(l);
+                }
+                if (whereEl) whereEl.textContent = `${data.district_name}, ${data.state_name}`;
+                if (probEl) probEl.textContent = `${data.probability}%`;
+                if (windowEl) windowEl.textContent = data.risk_window;
+                if (weatherLoc) weatherLoc.textContent = data.district_name;
+
+                // Sync weather forecast for this district
+                loadWeather(data.district_id);
+                if (data.officer_alert_dispatched) {
+                    toast(`⚠️ High Risk! SMS Alert sent to Officer (${data.officer_phone})`);
+                    loadAlerts();
+                } else {
+                    toast("ML prediction updated from backend");
+                }
+            } catch (err) {
+                console.error("Prediction request failed:", err);
+                toast("Backend prediction failed. Using cached values.", true);
+            }
+        }
+
+        async function predictFull() {
+            const pdistEl = document.getElementById('pdistrict');
+            const pstateEl = document.getElementById('pstate');
+            const pdaysEl = document.getElementById('pdays');
+            const fullResult = document.getElementById('fullResult');
+
+            const distId = Number(pdistEl?.value);
+            const distObj = idDistrictMap[distId];
+            const distName = distObj ? distObj.name : pdistEl?.options[pdistEl.selectedIndex]?.text;
+            const stateName = distObj ? distObj.state_name : pstateEl?.value;
+            const horizon = Number(pdaysEl?.value) || 3;
+
+            if (fullResult) {
+                fullResult.innerHTML = `<div><strong style="color:var(--muted)">Querying Random Forest ML prediction model...</strong></div>`;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/predictions/predict`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        district_id: distId || null,
+                        district_name: distName,
+                        state_name: stateName,
+                        horizon_days: horizon
+                    })
+                });
+
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const l = data.risk_level;
+
+                const officerNotice = data.officer_alert_dispatched
+                    ? `<p style="color:var(--orange);margin-top:6px;font-size:12px">📱 SMS Alert Dispatched to Agriculture Officer: ${data.officer_phone || 'Officer'} (${data.sms_status || 'Demo Mode'})</p>`
+                    : '';
+
+                if (fullResult) {
+                    fullResult.innerHTML = `
+                        <div>
+                            <strong style="color:${riskColor(l)}">${l} Risk</strong>
+                            <p>${data.district_name}, ${data.state_name}</p>
+                            <b>Probability: ${data.probability}%</b>
+                            <p class="muted">
+                                ${data.risk_window} · Confidence: ${data.confidence_interval || '±3.5%'}
+                            </p>
+                            ${officerNotice}
+                        </div>
+                    `;
+                }
+                if (data.officer_alert_dispatched) {
+                    toast(`⚠️ High Risk! SMS Alert sent to Officer (${data.officer_phone})`);
+                    loadAlerts();
+                } else {
+                    toast("ML prediction computed");
+                }
+            } catch (err) {
+                console.error("Full prediction request failed:", err);
+                if (fullResult) {
+                    fullResult.innerHTML = `<div><strong style="color:var(--red)">Failed to reach backend prediction service.</strong></div>`;
+                }
+                toast("Prediction request failed", true);
+            }
+        }
+
+        async function loadLatestPredictions(horizon = 3, stateFilter = "") {
+            try {
+                let url = `${API_BASE_URL}/predictions/latest?horizon_days=${horizon}`;
+                if (stateFilter && stateFilter !== "Punjab & Haryana") {
+                    url += `&state=${encodeURIComponent(stateFilter)}`;
+                }
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const list = data.predictions || [];
+
+                const riskRows = document.getElementById('riskRows');
+                const allRows = document.getElementById('allRows');
+
+                if (riskRows) {
+                    riskRows.innerHTML = list.slice(0, 6).map(r => `
+                        <tr>
+                            <td>${r.district}</td>
+                            <td>${r.state}</td>
+                            <td><span class="tag ${r.risk_level}">${r.risk_level}</span></td>
+                            <td>${r.probability}%</td>
+                        </tr>
+                    `).join('');
+                }
+
+                if (allRows) {
+                    allRows.innerHTML = list.map(r => `
+                        <tr>
+                            <td>${r.district}</td>
+                            <td>${r.state}</td>
+                            <td><span class="tag ${r.risk_level}">${r.risk_level}</span></td>
+                            <td>${r.probability}%</td>
+                        </tr>
+                    `).join('');
+                }
+
+                currentPredictions = list;
+
+                // Update SVG district map colors dynamically from latest risk predictions
+                updateMapDistrictFills(list);
+
+                // Update Risk Map summary, table and telemetry card
+                renderRiskMapSummary(list);
+                renderRiskMapTable(list);
+                if (list.length > 0) {
+                    selectRiskDistrict(selectedDistrictName || list[0].district);
+                }
+            } catch (err) {
+                console.error("Error loading latest risk predictions:", err);
+            }
+        }
+
+        function updateMapDistrictFills(predictions) {
+            const predMap = {};
+            predictions.forEach(p => {
+                predMap[p.district.toLowerCase()] = p;
+            });
+
+            document.querySelectorAll('.district').forEach(el => {
+                const dName = el.dataset.d;
+                if (dName && predMap[dName.toLowerCase()]) {
+                    const p = predMap[dName.toLowerCase()];
+                    el.setAttribute('fill', riskColor(p.risk_level));
+                }
+            });
+        }
+
+        // 3b. RISK MAP TELEMETRY, SUMMARY & INTERACTION LOGIC
+        function renderRiskMapSummary(predictions) {
+            const highList = predictions.filter(p => p.risk_level === 'High');
+            const medList = predictions.filter(p => p.risk_level === 'Medium');
+            const lowList = predictions.filter(p => p.risk_level === 'Low');
+
+            const hCountEl = document.getElementById('rmHighCount');
+            const mCountEl = document.getElementById('rmMedCount');
+            const lCountEl = document.getElementById('rmLowCount');
+            const hListEl = document.getElementById('rmHighList');
+            const mListEl = document.getElementById('rmMedList');
+            const lListEl = document.getElementById('rmLowList');
+
+            if (hCountEl) hCountEl.textContent = `${highList.length} Districts`;
+            if (mCountEl) mCountEl.textContent = `${medList.length} Districts`;
+            if (lCountEl) lCountEl.textContent = `${lowList.length} Districts`;
+
+            if (hListEl) {
+                hListEl.innerHTML = highList.map(p => `
+                    <span class="rm-pill High" onclick="selectRiskDistrict('${p.district}')">${p.district} (${p.probability}%)</span>
+                `).join('');
+            }
+            if (mListEl) {
+                mListEl.innerHTML = medList.map(p => `
+                    <span class="rm-pill Medium" onclick="selectRiskDistrict('${p.district}')">${p.district}</span>
+                `).join('');
+            }
+            if (lListEl) {
+                lListEl.innerHTML = lowList.map(p => `
+                    <span class="rm-pill Low" onclick="selectRiskDistrict('${p.district}')">${p.district}</span>
+                `).join('');
+            }
+        }
+
+        function renderRiskMapTable(predictions) {
+            const tbody = document.getElementById('rmTableRows');
+            const countEl = document.getElementById('rmTableCount');
+            if (!tbody) return;
+
+            const stateFilter = document.getElementById('rmStateFilter')?.value || "All";
+            const riskFilter = document.getElementById('rmRiskFilter')?.value || "All";
+            const searchVal = (document.getElementById('rmSearchInput')?.value || "").toLowerCase().trim();
+
+            const filtered = (predictions || currentPredictions).filter(p => {
+                const matchState = stateFilter === "All" || p.state === stateFilter;
+                const matchRisk = riskFilter === "All" || p.risk_level === riskFilter;
+                const matchSearch = !searchVal || p.district.toLowerCase().includes(searchVal) || p.state.toLowerCase().includes(searchVal);
+                return matchState && matchRisk && matchSearch;
+            });
+
+            if (countEl) countEl.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--secondary-text);padding:14px;">No matching districts found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(p => `
+                <tr style="cursor:pointer;${p.district.toLowerCase() === selectedDistrictName.toLowerCase() ? 'background:#E5EFF0;font-weight:600;' : ''}" onclick="selectRiskDistrict('${p.district}')">
+                    <td>${p.district}</td>
+                    <td>${p.state}</td>
+                    <td><span class="tag ${p.risk_level}">${p.risk_level}</span></td>
+                    <td style="color:${riskColor(p.risk_level)};font-weight:600;">${p.probability}%</td>
+                </tr>
+            `).join('');
+        }
+
+        function filterRiskMapTable() {
+            renderRiskMapTable(currentPredictions);
+        }
+
+        function applyRiskMapFilter() {
+            const stateFilter = document.getElementById('rmStateFilter')?.value || "All";
+            const riskFilter = document.getElementById('rmRiskFilter')?.value || "All";
+
+            const predMap = {};
+            currentPredictions.forEach(p => { predMap[p.district.toLowerCase()] = p; });
+
+            document.querySelectorAll('#riskMapContainer .district').forEach(el => {
+                const dName = el.dataset.d;
+                const p = dName ? predMap[dName.toLowerCase()] : null;
+                if (!p) return;
+
+                const matchState = stateFilter === "All" || p.state === stateFilter;
+                const matchRisk = riskFilter === "All" || p.risk_level === riskFilter;
+                el.classList.toggle('dimmed', !(matchState && matchRisk));
+            });
+
+            renderRiskMapTable(currentPredictions);
+        }
+
+        function selectRiskDistrict(dName) {
+            if (!dName) return;
+            selectedDistrictName = dName;
+            const dLower = dName.toLowerCase();
+            const pred = currentPredictions.find(p => p.district.toLowerCase() === dLower);
+            const distObj = districtMap[dLower];
+
+            const sName = pred ? pred.state : (distObj ? distObj.state_name : "Punjab");
+            const rLevel = pred ? pred.risk_level : "Low";
+            const prob = pred ? pred.probability : 18;
+            const horizon = pred ? pred.horizon_days : 3;
+
+            // Highlight on both SVG maps
+            document.querySelectorAll('.district').forEach(el => {
+                el.classList.toggle('selected', el.dataset.d?.toLowerCase() === dLower);
+            });
+
+            // Update Selected District Telemetry Card
+            const nameEl = document.getElementById('rmDetailName');
+            const stateEl = document.getElementById('rmDetailState');
+            const riskBadge = document.getElementById('rmDetailRiskBadge');
+            const probEl = document.getElementById('rmDetailProb');
+            const windowEl = document.getElementById('rmDetailWindow');
+            const officerEl = document.getElementById('rmDetailOfficer');
+            const phoneEl = document.getElementById('rmDetailPhone');
+            const alertBox = document.getElementById('rmDetailAlertBox');
+
+            if (nameEl) nameEl.textContent = dName;
+            if (stateEl) stateEl.textContent = sName;
+            if (riskBadge) {
+                riskBadge.className = `tag ${rLevel}`;
+                riskBadge.textContent = `${rLevel} Risk`;
+            }
+            if (probEl) {
+                probEl.textContent = `${prob}%`;
+                probEl.style.color = riskColor(rLevel);
+            }
+            if (windowEl) windowEl.textContent = `Within ${horizon}–5 days`;
+
+            const officer = distObj?.officer_name || "Agriculture Officer";
+            const phone = distObj?.officer_phone || "+919876543210";
+            if (officerEl) officerEl.textContent = officer;
+            if (phoneEl) phoneEl.textContent = phone;
+
+            if (alertBox) {
+                if (rLevel === "High") {
+                    alertBox.style.display = "block";
+                    alertBox.style.background = "#FCE8E8";
+                    alertBox.style.borderColor = "#F4B8B8";
+                    alertBox.style.color = "#A82C2C";
+                    alertBox.innerHTML = `⚠️ <strong>High Risk Notice:</strong> High stubble burning vulnerability predicted in ${dName}. Advisory alert queued for Agriculture Officer (${phone}).`;
+                } else if (rLevel === "Medium") {
+                    alertBox.style.display = "block";
+                    alertBox.style.background = "#FEF3DC";
+                    alertBox.style.borderColor = "#F5D79E";
+                    alertBox.style.color = "#9E6B17";
+                    alertBox.innerHTML = `ℹ️ <strong>Moderate Risk:</strong> Harvest readiness in ${dName} indicates medium probability. Continued monitoring recommended.`;
+                } else {
+                    alertBox.style.display = "none";
+                }
+            }
+
+            // Sync with Overview inputs
+            if (distObj) {
+                const ovState = document.getElementById('state');
+                const ovDist = document.getElementById('district');
+                if (ovState) ovState.value = distObj.state_name;
+                updateDistricts();
+                if (ovDist) ovDist.value = distObj.id;
+            }
+
+            // Highlight in table if visible
+            document.querySelectorAll('#rmTableRows tr').forEach(row => {
+                const isMatch = row.cells[0]?.textContent?.trim().toLowerCase() === dLower;
+                row.style.background = isMatch ? '#E5EFF0' : '';
+                row.style.fontWeight = isMatch ? '600' : 'normal';
+            });
+        }
+
+        function runPredictionFromMap() {
+            if (!selectedDistrictName) return;
+            const distObj = districtMap[selectedDistrictName.toLowerCase()];
+            const distId = distObj ? distObj.id : null;
+            const sName = distObj ? distObj.state_name : "Punjab";
+
+            toast(`Running Random Forest ML prediction for ${selectedDistrictName}...`);
+            fetch(`${API_BASE_URL}/predictions/predict`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    district_id: distId,
+                    district_name: selectedDistrictName,
+                    state_name: sName,
+                    horizon_days: 3
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                toast(`Prediction updated: ${data.district_name} is ${data.risk_level} Risk (${data.probability}%)`);
+                loadLatestPredictions(3);
+                selectRiskDistrict(data.district_name);
+            })
+            .catch(err => {
+                console.error("Prediction error:", err);
+                toast("Failed to update prediction", true);
+            });
+        }
+
+        function viewInOverview() {
+            if (!selectedDistrictName) return;
+            const distObj = districtMap[selectedDistrictName.toLowerCase()];
+            if (distObj) {
+                const ovState = document.getElementById('state');
+                if (ovState) ovState.value = distObj.state_name;
+                updateDistricts();
+                const ovDist = document.getElementById('district');
+                if (ovDist) ovDist.value = distObj.id;
+                predict();
+            }
+            page('Overview');
+        }
+
+        // 4. WEATHER: Load 4-Day Forecast from Backend
+        async function loadWeather(districtId) {
+            if (!districtId) districtId = 1;
+            try {
+                const res = await fetch(`${API_BASE_URL}/weather/${districtId}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const forecasts = data.forecasts || [];
+
+                const h = forecasts.map(x => `
+                    <div class="day">
+                        <small>${x.day_label}</small>
+                        <div style="font-size:26px;margin:8px">${x.icon}</div>
+                        <b>${Math.round(x.temperature)}°C</b>
+                        <p>
+                            Humidity: ${Math.round(x.humidity)}%<br>
+                            Wind: ${Math.round(x.wind_speed)} km/h
+                        </p>
+                    </div>
+                `).join('');
+
+                const wOverview = document.getElementById('weather');
+                const wPage = document.getElementById('weatherPage');
+                if (wOverview) wOverview.innerHTML = h;
+                if (wPage) wPage.innerHTML = h;
+
+                const locEl = document.getElementById('weatherLoc');
+                if (locEl) locEl.textContent = data.district_name;
+            } catch (err) {
+                console.error("Weather fetch failed:", err);
+            }
+        }
+
+        function onWeatherSelectChange(val) {
+            loadWeather(val);
+        }
+
+        // 5. FIRE DETECTIONS: Table, Search, Filter & CSV Export
+        async function loadFires(state = "", search = "") {
+            try {
+                let url = `${API_BASE_URL}/fires?limit=100`;
+                if (state && state !== "All states") {
+                    url += `&state=${encodeURIComponent(state)}`;
+                }
+                if (search && search.trim()) {
+                    url += `&search=${encodeURIComponent(search.trim())}`;
+                }
+
+                const res = await fetch(url);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const list = data.fires || [];
+
+                const fireRows = document.getElementById('fireRows');
+                if (fireRows) {
+                    if (list.length === 0) {
+                        fireRows.innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:14px">No fire observations matching criteria.</td></tr>`;
+                    } else {
+                        fireRows.innerHTML = list.map(r => `
+                            <tr>
+                                <td>${r.detection_date}</td>
+                                <td>${r.district}</td>
+                                <td>${r.state}</td>
+                                <td>${r.satellite}</td>
+                                <td><span class="tag ${r.confidence === 'High' ? 'High' : 'Medium'}">${r.confidence}</span></td>
+                                <td>${r.frp} MW</td>
+                            </tr>
+                        `).join('');
+                    }
+                }
+            } catch (err) {
+                console.error("Error loading fires:", err);
+            }
+        }
+
+        let filterDebounce;
+        function filterFires() {
+            clearTimeout(filterDebounce);
+            filterDebounce = setTimeout(() => {
+                const s = document.getElementById('fireState')?.value || "";
+                const q = document.getElementById('search')?.value || "";
+                loadFires(s, q);
+            }, 250);
+        }
+
+        function exportCSV() {
+            const s = document.getElementById('fireState')?.value || "";
+            const q = document.getElementById('search')?.value || "";
+            let url = `${API_BASE_URL}/fires?export_csv=true`;
+            if (s && s !== "All states") url += `&state=${encodeURIComponent(s)}`;
+            if (q && q.trim()) url += `&search=${encodeURIComponent(q.trim())}`;
+
+            window.open(url, '_blank');
+            toast("Exporting fire detections CSV from backend...");
+        }
+
+        // 6. FIRE TREND CHART: Aggregated Bar Chart from Backend
+        async function loadFireTrends(days = 7) {
+            try {
+                const res = await fetch(`${API_BASE_URL}/analytics/fire-trends?days=${days}`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                renderChart(data.labels || [], data.punjab || [], data.haryana || []);
+            } catch (err) {
+                console.error("Error loading fire trends:", err);
+            }
+        }
+
+        function renderChart(labels, p, h) {
+            const svg = document.getElementById('chart');
+            if (!svg) return;
+
+            const maxCount = Math.max(...p, ...h, 10);
+            const yMax = Math.ceil(maxCount / 5) * 5;
+            const step = Math.max(1, Math.round(yMax / 4));
+            const chartHeight = 130;
+            const scale = chartHeight / (step * 4);
+
+            let s = '';
+            for (let i = 0; i <= 4; i++) {
+                const val = i * step;
+                const y = 150 - (val * scale);
+                s += `
+                    <line x1="25" y1="${y}" x2="414" y2="${y}" stroke="#D8E1DA"/>
+                    <text x="2" y="${y + 4}" fill="#68756D" font-size="10">${val}</text>
+                `;
+            }
+
+            labels.forEach((l, i) => {
+                const x = 38 + i * 54;
+                const pVal = p[i] || 0;
+                const hVal = h[i] || 0;
+                const pHeight = Math.max(2, pVal * scale);
+                const hHeight = Math.max(2, hVal * scale);
+
+                s += `
+                    <rect x="${x}" y="${150 - pHeight}" width="16" height="${pHeight}" fill="#D89A32" rx="2">
+                        <title>Punjab: ${pVal} fires</title>
+                    </rect>
+                    <rect x="${x + 18}" y="${150 - hHeight}" width="16" height="${hHeight}" fill="#3E7C86" rx="2">
+                        <title>Haryana: ${hVal} fires</title>
+                    </rect>
+                    <text x="${x - 4}" y="166" fill="#68756D" font-size="9">${l}</text>
+                `;
+            });
+
+            svg.innerHTML = s;
+        }
+
+        // 7. ALERTS: Notification Inbox & Read Mutations
+        async function loadAlerts() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/alerts`);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const list = data.alerts || [];
+
+                const alertsEl = document.getElementById('alerts');
+                const recentAlerts = document.getElementById('recentAlerts');
+
+                if (alertsEl) {
+                    if (list.length === 0) {
+                        alertsEl.innerHTML = `<p class="muted">No alerts at this time.</p>`;
+                    } else {
+                        alertsEl.innerHTML = list.map(a => `
+                            <div class="alert" style="${a.is_read ? 'opacity:.55' : ''}">
+                                <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                                    <div>
+                                        <span class="tag ${a.severity}">${a.severity}</span>
+                                        <strong style="margin-left:6px">${a.title}</strong>
+                                        <p style="margin:4px 0 0 0;color:var(--secondary-text)">${a.message}</p>
+                                    </div>
+                                    <button class="nav" style="display:inline;width:auto;padding:3px 8px;margin:0"
+                                        onclick="readAlert(${a.id})">
+                                        ${a.is_read ? "✓ Read" : "Mark read"}
+                                    </button>
+                                </div>
+                                <small>${a.created_at} · District: ${a.district_name || 'Regional'}</small>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                if (recentAlerts) {
+                    recentAlerts.innerHTML = list.slice(0, 4).map(a => `
+                        <div class="alert" style="${a.is_read ? 'opacity:.6' : ''}">
+                            🔴 ${a.title}
+                            <small>${a.created_at}</small>
+                        </div>
+                    `).join('');
+                }
+            } catch (err) {
+                console.error("Error loading alerts:", err);
+            }
+        }
+
+        async function readAlert(id) {
+            try {
+                const res = await fetch(`${API_BASE_URL}/alerts/${id}/read`, { method: "PATCH" });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                toast("Alert marked read");
+                loadAlerts();
+            } catch (err) {
+                console.error("Error marking alert read:", err);
+                toast("Failed to update alert on backend.", true);
+            }
+        }
+
+        async function markAll() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/alerts/mark-all-read`, { method: "POST" });
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                toast(data.message || "All alerts marked read");
+                loadAlerts();
+            } catch (err) {
+                console.error("Error marking all alerts read:", err);
+                toast("Failed to update alerts on backend.", true);
+            }
+        }
+
+        // 8. SETTINGS & CSV LOCAL PREVIEW
+        function saveSettings() {
+            const selVal = document.getElementById('settingDays')?.value || "3";
+            const daysEl = document.getElementById('days');
+            const pdaysEl = document.getElementById('pdays');
+            if (daysEl) daysEl.value = selVal;
+            if (pdaysEl) pdaysEl.value = selVal;
+            localStorage.setItem('preburn_default_horizon', selVal);
+            predict();
+            toast("Default horizon applied");
+        }
+
+        function loadCSV(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const lines = e.target.result.split(/\r?\n/).filter(Boolean);
+                const statusEl = document.getElementById('csvStatus');
+                const previewEl = document.getElementById('preview');
+
+                if (statusEl) {
+                    statusEl.textContent = `${file.name}: ${lines.length - 1} data rows · preview only`;
+                }
+                if (previewEl) {
+                    previewEl.innerHTML = lines.slice(0, 6).map(row =>
+                        '<tr>' +
+                        row.split(',').map(v => `<td>${v.replaceAll('<', '&lt;')}</td>`).join('') +
+                        '</tr>'
+                    ).join('');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Map Click Listener
+        document.querySelectorAll('.district').forEach(el => {
+            el.addEventListener('click', () => {
+                const dName = el.dataset.d;
+                if (!dName) return;
+                selectRiskDistrict(dName);
+                const distObj = districtMap[dName.toLowerCase()];
+                if (distObj) {
+                    const stateEl = document.getElementById('state');
+                    if (stateEl) stateEl.value = distObj.state_name;
+                    updateDistricts();
+                    const districtEl = document.getElementById('district');
+                    if (districtEl) districtEl.value = distObj.id;
+                    predict();
+                } else {
+                    const s = ["Karnal", "Hisar", "Panipat", "Rohtak", "Sirsa"].includes(dName) ? "Haryana" : "Punjab";
+                    const stateEl = document.getElementById('state');
+                    if (stateEl) stateEl.value = s;
+                    updateDistricts();
+                    predict();
+                }
+            });
+        });
+
+        // App Initialization
+        async function initApp() {
+            const savedHorizon = localStorage.getItem('preburn_default_horizon');
+            if (savedHorizon) {
+                const daysEl = document.getElementById('days');
+                const pdaysEl = document.getElementById('pdays');
+                const setDaysEl = document.getElementById('settingDays');
+                if (daysEl) daysEl.value = savedHorizon;
+                if (pdaysEl) pdaysEl.value = savedHorizon;
+                if (setDaysEl) setDaysEl.value = savedHorizon;
+            }
+
+            await loadGeoData();
+            loadOverviewStats();
+            loadLatestPredictions(document.getElementById('days')?.value || 3);
+            loadAlerts();
+            loadFires();
+            loadFireTrends();
+
+            // Run initial prediction for default district (Ludhiana)
+            predict();
+        }
+
+        window.addEventListener('DOMContentLoaded', initApp);
+    </script>
+
+</body>
+
+</html>
